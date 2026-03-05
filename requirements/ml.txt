@@ -1,0 +1,13 @@
+# DERIM Middleware - Machine Learning Dependencies
+-r base.txt
+
+# Machine Learning
+scikit-learn>=1.3.0
+torch>=2.1.0
+
+# Visualization
+matplotlib>=3.8.0
+
+# Jupyter
+jupyter>=1.0.0
+notebook>=7.0.0

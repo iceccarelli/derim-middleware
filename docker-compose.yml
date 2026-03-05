@@ -1,0 +1,181 @@
+# =============================================================================
+# DERIM Middleware – Docker Compose Stack
+# =============================================================================
+# Orchestrates the middleware API, InfluxDB time-series database, and
+# optional Grafana dashboard for monitoring.
+#
+# Usage:
+#   docker compose up -d          # Start all services
+#   docker compose logs -f api    # Follow API logs
+#   docker compose down           # Stop and remove containers
+#
+# Profiles:
+#   docker compose --profile monitoring up -d   # Include Grafana
+#   docker compose --profile ml up -d           # Include Jupyter
+# =============================================================================
+
+version: "3.9"
+
+services:
+  # -------------------------------------------------------------------------
+  # DERIM Middleware API
+  # -------------------------------------------------------------------------
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: derim-api
+    restart: unless-stopped
+    ports:
+      - "${API_PORT:-8000}:8000"
+    environment:
+      - STORAGE_BACKEND=influxdb
+      - INFLUXDB_URL=http://influxdb:8086
+      - INFLUXDB_TOKEN=${INFLUXDB_TOKEN:-derim-dev-token}
+      - INFLUXDB_ORG=${INFLUXDB_ORG:-derim}
+      - INFLUXDB_BUCKET=${INFLUXDB_BUCKET:-derim_telemetry}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - MODEL_SAVE_DIR=/app/saved_models
+    volumes:
+      - model_data:/app/saved_models
+      - sqlite_data:/app/data
+    depends_on:
+      influxdb:
+        condition: service_healthy
+    networks:
+      - derim-net
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+  # -------------------------------------------------------------------------
+  # InfluxDB – Time-Series Database
+  # -------------------------------------------------------------------------
+  influxdb:
+    image: influxdb:2.7
+    container_name: derim-influxdb
+    restart: unless-stopped
+    ports:
+      - "${INFLUXDB_PORT:-8086}:8086"
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=${INFLUXDB_USER:-admin}
+      - DOCKER_INFLUXDB_INIT_PASSWORD=${INFLUXDB_PASSWORD:-derim-password}
+      - DOCKER_INFLUXDB_INIT_ORG=${INFLUXDB_ORG:-derim}
+      - DOCKER_INFLUXDB_INIT_BUCKET=${INFLUXDB_BUCKET:-derim_telemetry}
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=${INFLUXDB_TOKEN:-derim-dev-token}
+      - DOCKER_INFLUXDB_INIT_RETENTION=30d
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+      - influxdb_config:/etc/influxdb2
+    networks:
+      - derim-net
+    healthcheck:
+      test: ["CMD", "influx", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # -------------------------------------------------------------------------
+  # Grafana – Monitoring Dashboard (optional, use --profile monitoring)
+  # -------------------------------------------------------------------------
+  grafana:
+    image: grafana/grafana:10.2.0
+    container_name: derim-grafana
+    restart: unless-stopped
+    profiles:
+      - monitoring
+    ports:
+      - "${GRAFANA_PORT:-3000}:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-derim-grafana}
+      - GF_INSTALL_PLUGINS=
+    volumes:
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - influxdb
+    networks:
+      - derim-net
+
+  # -------------------------------------------------------------------------
+  # Jupyter Lab – ML Notebooks (optional, use --profile ml)
+  # -------------------------------------------------------------------------
+  jupyter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: derim-jupyter
+    restart: unless-stopped
+    profiles:
+      - ml
+    ports:
+      - "${JUPYTER_PORT:-8888}:8888"
+    environment:
+      - STORAGE_BACKEND=influxdb
+      - INFLUXDB_URL=http://influxdb:8086
+      - INFLUXDB_TOKEN=${INFLUXDB_TOKEN:-derim-dev-token}
+      - INFLUXDB_ORG=${INFLUXDB_ORG:-derim}
+      - INFLUXDB_BUCKET=${INFLUXDB_BUCKET:-derim_telemetry}
+    volumes:
+      - ./notebooks:/app/notebooks
+      - ./data:/app/data
+      - model_data:/app/saved_models
+    command: >
+      pip install jupyter jupyterlab &&
+      jupyter lab --ip=0.0.0.0 --port=8888 --no-browser
+      --NotebookApp.token=''
+      --NotebookApp.notebook_dir=/app/notebooks
+    depends_on:
+      - influxdb
+    networks:
+      - derim-net
+
+  # -------------------------------------------------------------------------
+  # MQTT Broker – Mosquitto (optional, use --profile mqtt)
+  # -------------------------------------------------------------------------
+  mosquitto:
+    image: eclipse-mosquitto:2
+    container_name: derim-mosquitto
+    restart: unless-stopped
+    profiles:
+      - mqtt
+    ports:
+      - "${MQTT_PORT:-1883}:1883"
+      - "9001:9001"
+    volumes:
+      - mosquitto_data:/mosquitto/data
+      - mosquitto_log:/mosquitto/log
+    networks:
+      - derim-net
+
+# ---------------------------------------------------------------------------
+# Volumes
+# ---------------------------------------------------------------------------
+volumes:
+  influxdb_data:
+    driver: local
+  influxdb_config:
+    driver: local
+  grafana_data:
+    driver: local
+  model_data:
+    driver: local
+  sqlite_data:
+    driver: local
+  mosquitto_data:
+    driver: local
+  mosquitto_log:
+    driver: local
+
+# ---------------------------------------------------------------------------
+# Networks
+# ---------------------------------------------------------------------------
+networks:
+  derim-net:
+    driver: bridge
+    name: derim-network
