@@ -1,14 +1,15 @@
-```markdown
 # DERIM Middleware
 
-**Distributed Energy Resource Integration Middleware**
+**Smart Grid Digital Twin Middleware for Distributed Energy Resource Integration**
 
 [![CI](https://github.com/iceccarelli/DERIM-Middleware-project/actions/workflows/ci.yml/badge.svg)](https://github.com/iceccarelli/DERIM-Middleware-project/actions/workflows/ci.yml)
-[![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
+[![Python 3.11+](https://img.shields.io/badge/Python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white)](https://www.docker.com/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=flat&logo=pytorch&logoColor=white)](https://pytorch.org/)
+[![InfluxDB](https://img.shields.io/badge/InfluxDB-22ADF6?style=flat&logo=InfluxDB&logoColor=white)](https://www.influxdata.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![Docker](https://img.shields.io/badge/docker-2496ED?style=flat&logo=docker&logoColor=white)](https://www.docker.com)
-[![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
 
 ---
 
@@ -16,11 +17,11 @@
 
 - [Motivation](#motivation)
 - [Overview](#overview)
-- [Who Should Use DERIM](#who-should-use-derim)
+- [Target Audience](#target-audience)
 - [Key Features](#key-features)
 - [Standards Compliance and Interoperability](#standards-compliance-and-interoperability)
 - [Architecture](#architecture)
-- [Quick Start](#quick-start)
+- [Getting Started](#getting-started)
 - [Project Structure](#project-structure)
 - [API Reference](#api-reference)
 - [Data Models](#data-models)
@@ -28,7 +29,7 @@
 - [Digital Twin Module](#digital-twin-module)
 - [Configuration](#configuration)
 - [Jupyter Notebooks](#jupyter-notebooks)
-- [Real-World Applications](#real-world-applications)
+- [Use Cases](#use-cases)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [License](#license)
@@ -38,172 +39,159 @@
 
 ## Motivation
 
-The integration of distributed energy resources (DERs) — rooftop solar, battery storage, electric vehicle chargers, and microgrids — continues to reshape power systems worldwide. Grid operators and developers often encounter fragmented protocols, vendor-specific interfaces, and the need for consistent data handling across diverse hardware.
+The global energy system is transitioning toward greater decentralisation. Millions of distributed energy resources — rooftop solar panels, battery storage systems, electric vehicle chargers, and community microgrids — are connecting to grids originally designed for unidirectional power flow. This shift introduces challenges related to protocol diversity, data normalisation, real-time visibility, and coordinated control.
 
-DERIM is an open-source middleware layer intended to simplify this integration. It translates between industrial protocols and a unified, standards-aligned data model, providing a stable foundation for monitoring, control, and analysis. The project is developed with a focus on modularity, reliability, and adherence to established standards, so that engineers, researchers, and organisations can build upon it without starting from scratch.
+DERIM is an open-source middleware platform developed to help address these integration challenges. It acts as a translation and normalisation layer between physical hardware and higher-level grid applications, providing a consistent, standards-aligned foundation that developers and operators can build upon.
 
-> "The clean energy transition will not be won by hardware alone. It will be won by the software that makes millions of distributed assets work together as one."
+> "Reliable integration software will be essential to making distributed energy resources work together effectively."
 
 ---
 
 ## Overview
 
-DERIM is a modular middleware platform that connects heterogeneous distributed energy resources to modern smart-grid applications. It ingests real-time data via standard industrial protocols, normalises it into vendor-neutral models aligned with IEEE 2030.5 and IEC 61968/61970 CIM, persists time-series telemetry, exposes a documented REST API, and includes a lightweight digital-twin component for forecasting and basic anomaly detection.
+DERIM (Distributed Energy Resource Integration Middleware) is a modular, open-source platform that bridges heterogeneous distributed energy resources and modern smart grid management systems. It ingests real-time data via industrial protocols, normalises it into a vendor-neutral model aligned with IEEE 2030.5 and IEC 61968 CIM, persists time-series telemetry, exposes a RESTful API, and includes lightweight digital twin functionality for forecasting and basic anomaly detection.
 
-The platform is built for **grid operators**, **DER manufacturers**, **energy researchers**, and **smart-grid developers** who require a clean, extensible integration layer.
+The platform is intended for grid operators, DER manufacturers, energy researchers, and smart grid developers who require a maintainable, extensible base for integration and analysis at various scales.
 
-### Who Should Use DERIM
+### Target Audience
 
-| Audience                        | Typical Use Case                                      |
-|---------------------------------|-------------------------------------------------------|
-| **Grid Operators and Utilities** | Unified visibility, monitoring, demand-response dispatch |
-| **DER Manufacturers**           | Compliance testing, protocol validation, interoperability checks |
-| **Energy Researchers**          | Time-series analysis, model benchmarking, simulation studies |
-| **Smart Grid Developers**       | Building dashboards, VPP platforms, or DERMS applications |
-| **Standards Bodies & Regulators**| Reference implementation for IEEE 2030.5, CIM, and OCPP |
-| **Universities and Students**   | Practical learning in smart grids, IoT, and energy ML |
+| Audience                        | Primary Use Cases |
+|---------------------------------|-------------------|
+| **Grid Operators & Utilities**  | Unified visibility, monitoring, demand response, and fleet control |
+| **DER Manufacturers**           | Standards-compliant testing, protocol validation, and interoperability certification |
+| **Energy Researchers**          | Time-series analysis, forecasting benchmarks, and digital twin experimentation |
+| **Smart Grid Developers**       | Building dashboards, mobile apps, virtual power plants, and DERMS platforms |
+| **Standards & Regulatory Bodies**| Reference implementation for IEEE 2030.5, IEC 61968 CIM, and OCPP |
+| **Universities & Students**     | Hands-on learning in smart grids, IoT, and energy systems modelling |
 
 ---
 
 ## Key Features
 
-| Feature                    | Description |
-|----------------------------|-------------|
-| **Multi-Protocol Adapters** | Modbus TCP/RTU, MQTT, SunSpec, OCPP 1.6/2.0.1 with pluggable design |
-| **Standards-Aligned Data Model** | Pydantic models following IEEE 2030.5 and IEC 61968/61970 CIM |
-| **Time-Series Storage**    | InfluxDB for production; SQLite fallback for development |
-| **REST API**               | FastAPI with OpenAPI/Swagger documentation and full CRUD operations |
-| **Digital Twin Engine**    | LSTM forecaster (PyTorch) plus baseline models and anomaly detection |
-| **Containerised Deployment** | Docker Compose including InfluxDB, Grafana, Mosquitto, and Jupyter |
-| **Production-Grade Quality** | 79 unit tests, GitHub Actions CI/CD, structured logging, type-safe config |
+| Feature                      | Description |
+|------------------------------|-------------|
+| **Multi-Protocol Adapters**  | Modbus TCP/RTU, MQTT, SunSpec, and OCPP 1.6/2.0.1 with a pluggable architecture |
+| **Standards-Aligned Models** | Pydantic data models consistent with IEEE 2030.5 and IEC 61968/61970 CIM |
+| **Time-Series Storage**      | InfluxDB for production environments with SQLite fallback for development |
+| **REST API**                 | FastAPI with automatic OpenAPI/Swagger documentation for device management, telemetry, and control |
+| **Digital Twin Engine**      | Lightweight LSTM forecaster (PyTorch) with baseline models and anomaly detection |
+| **Containerised Deployment** | Docker and Docker Compose including InfluxDB, Grafana, Mosquitto, and Jupyter |
+| **Software Quality**         | 79 unit tests, GitHub Actions CI/CD, structured logging, and type-safe configuration |
 
 ---
 
 ## Standards Compliance and Interoperability
 
-DERIM is constructed around widely adopted open standards to ensure seamless interaction with existing utility infrastructure and vendor equipment.
+DERIM is built around established open standards to ensure seamless integration with existing utility infrastructure and vendor equipment.
 
-| Standard / Protocol      | Role in DERIM                          | Interoperability Benefit |
-|--------------------------|----------------------------------------|--------------------------|
-| **IEEE 2030.5 (SEP 2.0)** | Core data model alignment              | Compatibility with smart inverters and utility head-end systems |
-| **IEC 61968 / 61970 CIM** | Telemetry and device taxonomy          | Exchange with SCADA, EMS, DMS, and ADMS platforms |
-| **Modbus TCP/RTU**       | Primary industrial adapter             | Connects to the majority of meters, inverters, and controllers |
-| **MQTT 3.1.1**           | Pub/sub for IoT and edge devices       | Lightweight communication with gateways and sensors |
-| **SunSpec**              | Solar-specific Modbus maps             | Plug-and-play with certified inverters (SMA, Fronius, SolarEdge, Enphase) |
-| **OCPP 1.6-J / 2.0.1**   | EV charging management                 | WebSocket support for major charger brands |
-| **OpenAPI 3.0**          | REST API specification                 | Interactive docs and client SDK generation |
+| Standard / Protocol     | Role in DERIM                          | Interoperability Benefit |
+|-------------------------|----------------------------------------|--------------------------|
+| **IEEE 2030.5**         | Core data model alignment              | Compatibility with smart inverters and demand response systems |
+| **IEC 61968 / 61970**   | Telemetry naming and device taxonomy   | Data exchange with SCADA, EMS, DMS, and ADMS |
+| **Modbus TCP/RTU**      | Primary industrial protocol adapter    | Connection to the majority of field devices |
+| **MQTT 3.1.1**          | IoT messaging adapter                  | Support for edge gateways and sensors |
+| **SunSpec**             | Solar inverter data mapping            | Plug-and-play with major certified inverters |
+| **OCPP 1.6-J / 2.0.1**  | EV charging station management         | WebSocket-based control of chargers |
+| **OpenAPI 3.0**         | REST API specification                 | Client SDK generation and interactive documentation |
 
 ---
 
 ## Architecture
 
 ```mermaid
-flowchart TD
-    subgraph "DER Hardware Layer"
-        A[Modbus Devices] 
-        B[MQTT Sensors]
-        C[SunSpec Inverters]
-        D[OCPP Chargers]
-    end
-
+graph TD
     subgraph "DERIM Middleware"
-        E[Protocol Adapters\n(Modbus, MQTT, SunSpec, OCPP)]
-        F[Data Normaliser\n(Common Information Model)]
+        subgraph Adapters["Protocol Adapters"]
+            Mod[Modbus Adapter]
+            Mqtt[MQTT Adapter]
+            Sun[SunSpec Adapter]
+            Ocpp[OCPP Adapter]
+        end
         
-        G[REST API\n(FastAPI)]
-        H[Storage Backend\n(InfluxDB / SQLite)]
-        I[Digital Twin\n(LSTM + Simulation)]
+        Normaliser["Data Normaliser<br/>(Common Information Model)"]
+        
+        API["REST API<br/>(FastAPI)"]
+        Storage["Storage Backend<br/>(InfluxDB / SQLite)"]
+        Twin["Digital Twin Engine<br/>(LSTM + Simulation)"]
+        
+        Mod & Mqtt & Sun & Ocpp --> Normaliser
+        Normaliser --> API
+        Normaliser --> Storage
+        Normaliser --> Twin
     end
-
-    A --> E
-    B --> E
-    C --> E
-    D --> E
-    E --> F
-    F --> G
-    F --> H
-    F --> I
-
-    style E fill:#e3f2fd
-    style F fill:#f3e5f5
-    style G fill:#e8f5e9
-    style H fill:#fff3e0
-    style I fill:#ffebee
+    
+    DERDevices["DER Hardware"] --> Adapters
+    Clients["External Applications<br/>(SCADA, VPP, Dashboards)"] --> API
 ```
 
 ---
 
-## Quick Start
+## Getting Started
 
 ### Prerequisites
-Python 3.11+ is required. Docker is recommended for the complete stack but optional for core development.
+Python 3.11 or later. Docker is recommended for the complete stack but optional for core development.
 
 ### Installation
+
 ```bash
 git clone https://github.com/iceccarelli/DERIM-Middleware-project.git
 cd DERIM-Middleware-project
 
-python3.11 -m venv .venv
+python -m venv .venv
 source .venv/bin/activate
 
 pip install --upgrade pip
 pip install -r requirements/base.txt
 pip install -e .
-
 cp .env.example .env
 ```
 
-### Running the API
-```bash
-# Development mode with SQLite (no external services)
-uvicorn derim.main:app --reload
+### Running the API (development)
 
-# API available at http://localhost:8000
-# Interactive documentation: http://localhost:8000/docs
+```bash
+uvicorn derim.main:app --reload
 ```
 
-### Running with Docker
+The service will be available at http://localhost:8000 (interactive documentation at /docs).
+
+### Full Stack with Docker
+
 ```bash
-# Full stack (API + InfluxDB + MQTT)
-docker compose up -d
-
-# With monitoring dashboards
-docker compose --profile monitoring up -d
-
-# With Jupyter for ML experimentation
-docker compose --profile ml up -d
+docker compose up -d                    # core services
+docker compose --profile monitoring up -d   # + Grafana
+docker compose --profile ml up -d           # + Jupyter
 ```
 
 ### Running Tests
+
 ```bash
 pip install -r requirements/dev.txt
 pytest tests/ -v
 ```
 
-All tests pass cleanly; code is formatted with Black, isort, and linted with flake8.
-
 ---
 
 ## Project Structure
+
 ```
 DERIM-Middleware-project/
-├── src/derim/                  # Main package
-│   ├── adapters/               # Protocol implementations
-│   ├── api/                    # FastAPI routes & dependencies
+├── src/derim/                  # Main application package
+│   ├── adapters/               # Protocol adapters
+│   ├── api/                    # FastAPI routes and dependencies
 │   ├── digital_twin/           # Forecasting and simulation
-│   ├── models/                 # Pydantic schemas
-│   ├── storage/                # Backend abstractions
-│   ├── utils/                  # Logging and helpers
+│   ├── models/                 # Pydantic data models
+│   ├── storage/                # Storage backends
+│   ├── utils/                  # Logging and utilities
 │   ├── config.py
 │   └── main.py
-├── tests/                      # 79 unit tests
-├── notebooks/                  # Demonstrations
+├── tests/                      # Test suite (79 tests)
+├── notebooks/                  # Jupyter demonstrations
 ├── data/                       # Sample datasets
-├── docs/                       # Detailed guides
+├── docs/                       # Extended documentation
 ├── docker-compose.yml
 ├── Dockerfile
-├── requirements/               # Split dependency groups
-├── .github/                    # CI workflows
+├── requirements/               # Dependency groups
+├── .github/                    # CI/CD workflows
 ├── CONTRIBUTING.md
 ├── CHANGELOG.md
 └── LICENSE
@@ -213,138 +201,124 @@ DERIM-Middleware-project/
 
 ## API Reference
 
-The REST API is served at `/api/v1/` with automatic Swagger UI (`/docs`) and ReDoc (`/redoc`).
+The REST API is served at `/api/v1/` with interactive Swagger UI at `/docs`.
 
 ### Core Endpoints
 
-| Method | Path                        | Description |
-|--------|-----------------------------|-------------|
-| `GET`  | `/health`                   | Service status and version |
-| `GET`  | `/api/v1/devices`           | List registered devices |
-| `POST` | `/api/v1/devices`           | Register new device |
-| `GET`  | `/api/v1/telemetry/{id}`    | Query historical data |
-| `POST` | `/api/v1/telemetry/{id}`    | Ingest new telemetry |
-| `POST` | `/api/v1/control/{id}`      | Send control command |
-| `GET`  | `/api/v1/forecast/{id}`     | Retrieve ML forecast |
+| Method | Path                          | Description |
+|--------|-------------------------------|-------------|
+| `GET`  | `/health`                     | Health check and version information |
+| `GET`  | `/api/v1/devices`             | List registered devices |
+| `POST` | `/api/v1/devices`             | Register a new device |
+| `GET`  | `/api/v1/telemetry/{id}`      | Query historical telemetry |
+| `POST` | `/api/v1/control/{id}`        | Send control commands |
+| `GET`  | `/api/v1/forecast/{id}`       | Retrieve forecasts |
 
-**Example requests** are provided in the interactive documentation. Sample curl commands are available in the `docs/api_reference.md` file.
+Example requests and responses are available in the interactive documentation.
 
 ---
 
 ## Data Models
 
-All data is modelled with Pydantic v2 and aligned with IEEE 2030.5 and IEC 61968 CIM. The base `DERTelemetry` class serves as the normalisation target for every adapter.
+All telemetry and commands are modelled with Pydantic classes aligned to relevant standards.
 
-| Model              | Purpose                          | Notable Fields |
-|--------------------|----------------------------------|----------------|
-| `DERTelemetry`     | Core telemetry record            | `timestamp`, `power_kw`, `voltage_v`, `state` |
-| `SolarTelemetry`   | Solar PV extension               | `irradiance_w_m2`, `dc_voltage_v` |
-| `BatteryTelemetry` | Battery storage extension        | `soc_percent`, `soh_percent` |
-| `EVChargerTelemetry` | EVSE extension                 | `connector_status`, `session_energy_kwh` |
-| `DERDevice`        | Device registration              | `device_id`, `protocol`, `rated_power_kw` |
+| Model               | Purpose                          | Key Fields |
+|---------------------|----------------------------------|------------|
+| `DERTelemetry`      | Base record                      | timestamp, device_id, power_kw, voltage_v, state |
+| `SolarTelemetry`    | Solar PV extension               | irradiance_w_m2, panel_temperature_c |
+| `BatteryTelemetry`  | BESS extension                   | soc_percent, soh_percent, charge_rate_kw |
+| `EVChargerTelemetry`| EVSE extension                   | connector_status, session_energy_kwh |
+| `DERDevice`         | Device registration              | device_type, location, rated_power_kw |
+| `CommandRequest`    | Control commands                 | command, value, parameters |
 
 ---
 
 ## Protocol Adapters
 
-Each adapter inherits from `BaseAdapter` and implements `connect()`, `disconnect()`, `read_data()`, and `write_command()`. Data is automatically normalised to the common model.
+Each adapter inherits from `BaseAdapter` and implements `connect()`, `disconnect()`, `read_data()`, and `write_command()`. All data is normalised to the common model.
 
-| Adapter         | Protocol          | Typical Devices                     |
-|-----------------|-------------------|-------------------------------------|
-| `ModbusAdapter` | Modbus TCP/RTU    | Inverters, meters, BMS              |
-| `MQTTAdapter`   | MQTT 3.1.1        | IoT gateways and sensors            |
-| `SunSpecAdapter`| SunSpec over Modbus | Certified solar inverters         |
-| `OCPPAdapter`   | OCPP 1.6-J        | EV charging stations                |
+| Adapter          | Protocol          | Typical Devices                     | Transport |
+|------------------|-------------------|-------------------------------------|-----------|
+| `ModbusAdapter`  | Modbus TCP/RTU    | Inverters, meters, BMS              | TCP/Serial |
+| `MQTTAdapter`    | MQTT 3.1.1        | IoT gateways and sensors            | TCP pub/sub |
+| `SunSpecAdapter` | SunSpec (Modbus)  | SMA, Fronius, SolarEdge, Enphase    | TCP |
+| `OCPPAdapter`    | OCPP 1.6-J / 2.0.1| ABB, Schneider, ChargePoint chargers| WebSocket |
 
-Adding a new adapter requires only implementing the four abstract methods — a process that typically takes under an hour for common protocols.
+Adding a new adapter follows a simple pattern (see `adapters/base.py`).
 
 ---
 
 ## Digital Twin Module
 
-The digital twin component offers basic forecasting and anomaly detection capabilities.
-
-- **Forecasting**: LSTM network (PyTorch) with persistence and moving-average baselines. Forecasts are generated for horizons of 1–168 hours.
-- **Simulation**: Compares predictions against live telemetry, computes error metrics (MAE, RMSE), and flags anomalies using configurable thresholds.
-- **Training**: End-to-end pipeline with data preprocessing and model persistence.
-
-The module is intentionally lightweight and designed to be extended or replaced with more sophisticated models as needed.
+The digital twin module offers basic forecasting and simulation tools. It includes an LSTM network (PyTorch) trained on historical telemetry, together with persistence and moving-average baselines for comparison. The simulator computes residuals, flags anomalies using configurable thresholds, and supports simple what-if scenario analysis.
 
 ---
 
 ## Configuration
 
-Configuration is managed through Pydantic Settings and environment variables (or `.env` file). All values are validated at startup.
+Configuration is managed through Pydantic Settings and environment variables.
 
-| Variable                  | Default               | Description |
-|---------------------------|-----------------------|-------------|
-| `STORAGE_BACKEND`         | `sqlite`              | `sqlite` or `influxdb` |
-| `INFLUXDB_URL`            | `http://localhost:8086` | InfluxDB endpoint |
-| `APP_PORT`                | `8000`                | API listening port |
-| `LOG_LEVEL`               | `INFO`                | Logging verbosity |
-| `LSTM_EPOCHS`             | `50`                  | Training iterations (example) |
-
-Full list and descriptions are in `src/derim/config.py`.
+| Variable               | Default              | Description |
+|------------------------|----------------------|-------------|
+| `STORAGE_BACKEND`      | `sqlite`             | `sqlite` or `influxdb` |
+| `INFLUXDB_URL`         | `http://localhost:8086` | InfluxDB endpoint |
+| `APP_PORT`             | `8000`               | API listening port |
+| `LOG_LEVEL`            | `INFO`               | Logging verbosity |
+| `LSTM_EPOCHS`          | `50`                 | Training epochs (when applicable) |
 
 ---
 
 ## Jupyter Notebooks
 
-The `notebooks/` directory contains ready-to-run demonstrations:
+Demonstration notebooks are provided in the `notebooks/` directory.
 
-- `01_data_exploration.ipynb` – Dataset visualisation and statistics
-- `02_protocol_demo.ipynb` – Adapter usage examples
-- `03_digital_twin_training.ipynb` – Model training workflow
-- `04_api_client_demo.ipynb` – REST API interaction
+| Notebook                          | Description |
+|-----------------------------------|-------------|
+| `01_data_exploration.ipynb`       | Sample dataset visualisation and statistics |
+| `02_protocol_demo.ipynb`          | Adapter usage examples |
+| `03_digital_twin_training.ipynb`  | LSTM training and evaluation |
+| `04_api_client_demo.ipynb`        | REST API interaction examples |
 
 ---
 
-## Real-World Applications
+## Use Cases
 
-DERIM has been structured to support common energy-system workflows:
-
-- Multi-vendor fleet monitoring
-- Real-time telemetry aggregation
-- Solar generation and load forecasting
-- EV charging coordination
-- Battery dispatch for peak shaving
-- Regulatory reporting preparation
-- Research experimentation
-- Virtual power plant data layers
+| Challenge                          | How DERIM Helps |
+|------------------------------------|-----------------|
+| Multi-vendor DER fleet management  | Normalised data via unified API |
+| Real-time grid visibility          | Time-series storage and querying |
+| Solar generation forecasting       | LSTM-based predictions with horizons up to 168 hours |
+| EV charging load management        | OCPP-based remote control |
+| Battery dispatch optimisation      | Combined forecasting and control endpoints |
 
 ---
 
 ## Roadmap
 
-Future development will focus on the following areas (contributions welcomed):
+The following areas are under consideration for future releases. Contributions in any of these directions are welcome.
 
-| Priority | Feature                  | Status |
-|----------|--------------------------|--------|
-| High     | DNP3 and IEC 61850 adapters | Planned |
-| High     | WebSocket telemetry streaming | Planned |
-| Medium   | OpenADR 2.0b support     | Planned |
-| Medium   | Pre-built Grafana dashboards | In progress |
-| Low      | Lightweight edge deployment | Planned |
+| Priority | Feature                  | Description |
+|----------|--------------------------|-------------|
+| High     | DNP3 and IEC 61850       | Additional utility-grade protocol support |
+| High     | WebSocket streaming      | Real-time telemetry push |
+| Medium   | OpenADR 2.0b             | Demand response programme integration |
+| Medium   | Pre-built Grafana dashboards | Ready-to-use monitoring templates |
+| Low      | Edge-optimised mode      | Lightweight deployment for Raspberry Pi |
 
 ---
 
 ## Contributing
 
-Contributions of any size are welcome and appreciated. Whether you are reporting an issue, improving documentation, adding an adapter, or sharing datasets, your help advances the project.
-
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) before submitting a pull request. All contributors are expected to follow the project's code of conduct.
+Contributions of any kind — code, documentation, issues, or datasets — are appreciated. Please read [CONTRIBUTING.md](CONTRIBUTING.md) before submitting a pull request.
 
 ---
 
 ## License
 
-This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for the full text.
 
 ---
 
 ## Acknowledgements
 
-DERIM builds on the excellent work of the IEEE 2030.5 working group, the SunSpec Alliance, the Open Charge Alliance, and the open-source communities behind FastAPI, PyTorch, InfluxDB, and Pydantic. Thank you to everyone whose tools and standards made this project possible.
-
-**Built with care. Open for collaboration.**
-```
+DERIM builds on the work of the IEEE 2030.5 and SunSpec communities, the Open Charge Alliance, and the maintainers of FastAPI, PyTorch, InfluxDB, Pydantic, and many other excellent open-source libraries. Thank you to everyone who has contributed to these foundations.
