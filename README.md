@@ -2,7 +2,7 @@
 
 **Smart Grid Digital Twin Middleware for Distributed Energy Resource Integration**
 
-[![CI](https://github.com/iceccarelli/DERIM-Middleware-project/actions/workflows/ci.yml/badge.svg)](https://github.com/iceccarelli/DERIM-Middleware-project/actions/workflows/ci.yml)
+[![CI](https://github.com/iceccarelli/derim-middleware/actions/workflows/ci.yml/badge.svg)](https://github.com/iceccarelli/derim-middleware/actions/workflows/ci.yml)
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
 [![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white)](https://www.docker.com/)
