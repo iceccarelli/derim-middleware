@@ -11,6 +11,7 @@ during development.  Every module should obtain its logger via::
 
 import logging
 import sys
+from typing import cast
 
 import structlog
 
@@ -89,4 +90,4 @@ def get_logger(name: str) -> structlog.stdlib.BoundLogger:
     structlog.stdlib.BoundLogger
         A structured logger instance.
     """
-    return structlog.get_logger(name)
+    return cast(structlog.stdlib.BoundLogger, structlog.get_logger(name))

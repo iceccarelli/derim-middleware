@@ -37,7 +37,7 @@ from __future__ import annotations
 
 import asyncio
 from datetime import datetime, timezone
-from typing import Any, Optional
+from typing import Any, Optional, cast
 
 from derim.adapters.base import BaseAdapter
 from derim.models.common import (
@@ -116,10 +116,10 @@ class OCPPAdapter(BaseAdapter):
             import websockets
 
             self._server = await websockets.serve(
-                self._on_charge_point_connect,
+                cast(Any, self._on_charge_point_connect),
                 self._ws_host,
                 self._ws_port,
-                subprotocols=["ocpp1.6", "ocpp2.0.1"],
+                subprotocols=cast(Any, ["ocpp1.6", "ocpp2.0.1"]),
             )
             self._connected = True
             logger.info(
@@ -129,11 +129,11 @@ class OCPPAdapter(BaseAdapter):
                 port=self._ws_port,
             )
 
-        except ImportError:
+        except ImportError as exc:
             raise ImportError(
                 "websockets and ocpp are required for the OCPP adapter. "
                 "Install them with: pip install websockets ocpp"
-            )
+            ) from exc
         except Exception as exc:
             logger.error(
                 "ocpp_server_start_failed",
@@ -314,6 +314,8 @@ class OCPPAdapter(BaseAdapter):
 
         telemetry = self._latest_telemetry
         self._telemetry_event.clear()
+        if telemetry is None:
+            raise RuntimeError("Telemetry was not available after wait completion.")
         return telemetry
 
     async def write_command(self, command: CommandRequest) -> CommandResponse:

@@ -1,0 +1,11 @@
+exclude_dirs:
+  - tests
+  - .venv
+  - build
+  - dist
+
+skips:
+  - B101
+
+severity: medium
+confidence: medium

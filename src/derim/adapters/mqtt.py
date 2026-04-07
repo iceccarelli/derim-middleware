@@ -178,11 +178,11 @@ class MQTTAdapter(BaseAdapter):
                 port=self._port,
             )
 
-        except ImportError:
+        except ImportError as exc:
             raise ImportError(
                 "paho-mqtt is required for the MQTT adapter. "
                 "Install it with: pip install paho-mqtt"
-            )
+            ) from exc
         except Exception as exc:
             logger.error(
                 "mqtt_connection_error",
@@ -226,11 +226,11 @@ class MQTTAdapter(BaseAdapter):
                 await asyncio.wait_for(
                     self._message_event.wait(), timeout=self._read_timeout
                 )
-            except asyncio.TimeoutError:
+            except asyncio.TimeoutError as exc:
                 raise TimeoutError(
                     f"No MQTT message received for device {self.device_id} "
                     f"within {self._read_timeout}s"
-                )
+                ) from exc
 
         payload = self._latest_message or {}
 

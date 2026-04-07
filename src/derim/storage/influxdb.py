@@ -101,11 +101,11 @@ class InfluxDBStorage(StorageBackend):
                 bucket=self._bucket,
             )
 
-        except ImportError:
+        except ImportError as exc:
             raise ImportError(
                 "influxdb-client is required. "
                 "Install it with: pip install influxdb-client"
-            )
+            ) from exc
         except Exception as exc:
             logger.error("influxdb_connection_failed", error=str(exc))
             raise ConnectionError(f"InfluxDB connection failed: {exc}") from exc

@@ -7,5 +7,5 @@ protocols, normalizes it into a common information model, and provides
 REST APIs for monitoring, control, and ML-based forecasting.
 """
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 __author__ = "DERIM Contributors"

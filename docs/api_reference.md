@@ -29,7 +29,7 @@ Returns the application health status, version, storage backend type, and storag
 ```json
 {
   "status": "healthy",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "storage_backend": "sqlite",
   "storage_connected": true
 }

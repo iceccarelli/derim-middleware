@@ -33,7 +33,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from typing import Any, Optional
+from typing import Any, Optional, cast
 
 import numpy as np
 
@@ -226,10 +226,13 @@ class Simulator:
         if self._forecaster is None:
             raise RuntimeError("No model loaded. Call load_model() first.")
 
-        predictions = self._forecaster.predict(
-            device_id=self.device_id,
-            horizon_hours=horizon_hours,
-            recent_values=input_values,
+        predictions = cast(
+            list[ForecastPoint],
+            self._forecaster.predict(
+                device_id=self.device_id,
+                horizon_hours=horizon_hours,
+                recent_values=input_values,
+            ),
         )
 
         logger.info(

@@ -37,7 +37,7 @@ Usage
 from __future__ import annotations
 
 from datetime import datetime, timezone
-from typing import Any, Optional
+from typing import Any, Optional, cast
 
 from derim.adapters.base import BaseAdapter
 from derim.models.common import (
@@ -146,11 +146,11 @@ class SunSpecAdapter(BaseAdapter):
                 port=self._port,
             )
 
-        except ImportError:
+        except ImportError as exc:
             raise ImportError(
                 "pymodbus is required for the SunSpec adapter. "
                 "Install it with: pip install pymodbus"
-            )
+            ) from exc
         except Exception as exc:
             logger.error(
                 "sunspec_connection_failed",
@@ -182,7 +182,7 @@ class SunSpecAdapter(BaseAdapter):
                 error=str(result),
             )
             return [0] * count
-        return result.registers
+        return cast(list[int], result.registers)
 
     async def read_data(self) -> SolarTelemetry:
         """

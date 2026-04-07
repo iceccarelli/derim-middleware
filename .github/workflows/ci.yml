@@ -1,100 +1,173 @@
-name: CI
+name: Continuous Integration
 
 on:
   push:
     branches: [main, develop]
+    tags:
+      - "v*"
   pull_request:
-    branches: [main]
+    branches: [main, develop]
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 concurrency:
-  group: ci-${{ github.ref }}
+  group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  PYTHON_DEFAULT: "3.11"
+  PACKAGE_NAME: derim-middleware
+  COVERAGE_FILE: coverage.xml
+
 jobs:
-  # ---------------------------------------------------------------------------
-  # Lint & Format Check
-  # ---------------------------------------------------------------------------
   lint:
     name: Lint & Format
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out repository
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: ${{ env.PYTHON_DEFAULT }}
+          cache: pip
+          cache-dependency-path: |
+            requirements/base.txt
+            requirements/dev.txt
+            pyproject.toml
 
-      - name: Install linting tools
-        run: pip install black isort flake8
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements/base.txt -r requirements/dev.txt
+          pip install -e .
 
-      - name: Check formatting (black)
-        run: black --check src/ tests/
+      - name: Run Ruff linter
+        run: ruff check src tests
 
-      - name: Check import order (isort)
-        run: isort --check-only src/ tests/
+      - name: Run Ruff formatter check
+        run: ruff format --check src tests
 
-      - name: Lint (flake8)
-        run: flake8 src/ tests/ --max-line-length 100 --ignore E501,W503,E203
+  typecheck:
+    name: Type Check
+    runs-on: ubuntu-latest
 
-  # ---------------------------------------------------------------------------
-  # Unit Tests
-  # ---------------------------------------------------------------------------
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_DEFAULT }}
+          cache: pip
+          cache-dependency-path: |
+            requirements/base.txt
+            requirements/dev.txt
+            pyproject.toml
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements/base.txt -r requirements/dev.txt
+          pip install -e .
+
+      - name: Run MyPy
+        run: mypy src/derim
+
   test:
-    name: Tests (Python ${{ matrix.python-version }})
+    name: Test (Python ${{ matrix.python-version }})
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         python-version: ["3.11", "3.12", "3.13"]
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out repository
+        uses: actions/checkout@v4
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-
-      - name: Cache pip packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('requirements/*.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-${{ matrix.python-version }}-
+          cache: pip
+          cache-dependency-path: |
+            requirements/base.txt
+            requirements/dev.txt
+            pyproject.toml
 
       - name: Install dependencies
         run: |
-          pip install --upgrade pip
-          pip install -r requirements/base.txt
-          pip install -r requirements/dev.txt
+          python -m pip install --upgrade pip
+          pip install -r requirements/base.txt -r requirements/dev.txt
+          pip install -e .
 
-      - name: Install package
-        run: pip install -e .
-
-      - name: Run tests with coverage
+      - name: Run pytest with coverage
         run: |
-          pytest tests/ \
-            --cov=derim \
-            --cov-report=xml \
+          pytest tests/ -v \
+            --cov=src/derim \
+            --cov-report=xml:${{ env.COVERAGE_FILE }} \
             --cov-report=term-missing \
-            -v
+            --tb=short
 
-      - name: Upload coverage to Codecov
-        if: matrix.python-version == '3.11'
-        uses: codecov/codecov-action@v4
+      - name: Upload coverage artifact
+        if: matrix.python-version == env.PYTHON_DEFAULT
+        uses: actions/upload-artifact@v4
         with:
-          file: ./coverage.xml
-          fail_ci_if_error: false
+          name: coverage-report
+          path: ${{ env.COVERAGE_FILE }}
+          if-no-files-found: error
 
-  # ---------------------------------------------------------------------------
-  # Docker Build
-  # ---------------------------------------------------------------------------
+  package:
+    name: Package Build
+    runs-on: ubuntu-latest
+    needs: [lint, typecheck, test]
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_DEFAULT }}
+          cache: pip
+          cache-dependency-path: |
+            requirements/base.txt
+            requirements/dev.txt
+            pyproject.toml
+
+      - name: Install packaging tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install build twine
+
+      - name: Build distributions
+        run: python -m build
+
+      - name: Validate distributions
+        run: twine check dist/*
+
+      - name: Upload distribution artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-dist
+          path: dist/*
+          if-no-files-found: error
+
   docker:
     name: Docker Build
     runs-on: ubuntu-latest
-    needs: [lint, test]
+    needs: [lint, typecheck, test]
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out repository
+        uses: actions/checkout@v4
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -103,29 +176,88 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
+          file: ./Dockerfile
           push: false
+          load: true
           tags: derim-middleware:ci
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  # ---------------------------------------------------------------------------
-  # Security Scan
-  # ---------------------------------------------------------------------------
+      - name: Smoke test Docker image
+        run: |
+          docker run -d --name derim-middleware-ci -p 8000:8000 derim-middleware:ci
+          for attempt in $(seq 1 20); do
+            if curl -fsS http://localhost:8000/health; then
+              break
+            fi
+            sleep 3
+          done
+          curl -fsS http://localhost:8000/health
+          docker logs derim-middleware-ci
+          docker stop derim-middleware-ci
+
   security:
     name: Security Scan
     runs-on: ubuntu-latest
-    needs: [test]
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out repository
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: ${{ env.PYTHON_DEFAULT }}
+          cache: pip
+          cache-dependency-path: |
+            requirements/base.txt
+            requirements/dev.txt
+            pyproject.toml
 
-      - name: Install safety
-        run: pip install safety
+      - name: Install dependencies and security tooling
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements/base.txt -r requirements/dev.txt
+          pip install -e .
+          pip install bandit[toml] pip-audit
 
-      - name: Check dependencies for vulnerabilities
-        run: safety check -r requirements/base.txt || true
-        continue-on-error: true
+      - name: Run Bandit static analysis
+        run: bandit -r src/derim -c .bandit.yml -f screen
+
+      - name: Run dependency vulnerability audit
+        run: pip-audit -r requirements/base.txt --progress-spinner off
+
+  release-readiness:
+    name: Release Readiness
+    runs-on: ubuntu-latest
+    needs: [package, docker, security]
+    if: github.event_name != 'pull_request'
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Download distribution artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: python-dist
+          path: dist
+
+      - name: Verify release tag matches package version
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: bash
+        run: |
+          TAG_VERSION="${GITHUB_REF#refs/tags/v}"
+          PACKAGE_VERSION=$(python - <<'PY'
+          import pathlib, re
+          text = pathlib.Path('pyproject.toml').read_text()
+          match = re.search(r'^version\s*=\s*"([^"]+)"', text, re.MULTILINE)
+          print(match.group(1))
+          PY
+          )
+          test "$TAG_VERSION" = "$PACKAGE_VERSION"
+
+      - name: Summarize release artifacts
+        run: |
+          echo "Validated artifacts:" >> "$GITHUB_STEP_SUMMARY"
+          ls -1 dist >> "$GITHUB_STEP_SUMMARY"

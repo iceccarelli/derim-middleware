@@ -141,8 +141,7 @@ class ModbusAdapter(BaseAdapter):
             connected = await self._client.connect()
             if not connected:
                 raise ConnectionError(
-                    f"Failed to connect to Modbus device at "
-                    f"{self._host}:{self._port}"
+                    f"Failed to connect to Modbus device at {self._host}:{self._port}"
                 )
 
             self._connected = True
@@ -154,11 +153,11 @@ class ModbusAdapter(BaseAdapter):
                 protocol=self._protocol,
             )
 
-        except ImportError:
+        except ImportError as exc:
             raise ImportError(
                 "pymodbus is required for the Modbus adapter. "
                 "Install it with: pip install pymodbus"
-            )
+            ) from exc
         except Exception as exc:
             logger.error(
                 "modbus_connection_failed",

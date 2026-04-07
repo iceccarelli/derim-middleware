@@ -34,7 +34,7 @@ FROM python:3.11-slim AS runtime
 
 LABEL maintainer="DERIM Project <derim@example.com>"
 LABEL description="Smart Grid Digital Twin Middleware for DER Integration"
-LABEL version="0.1.0"
+LABEL version="0.1.1"
 
 # Create a non-root user for security.
 RUN groupadd --gid 1000 derim && \

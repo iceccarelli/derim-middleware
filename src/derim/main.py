@@ -72,7 +72,7 @@ def create_app() -> FastAPI:
             "Resource Integration.  Provides REST endpoints for device "
             "telemetry, control commands, and ML-based forecasting."
         ),
-        version="0.1.0",
+        version="0.1.1",
         docs_url="/docs",
         redoc_url="/redoc",
         lifespan=lifespan,
@@ -105,7 +105,7 @@ def create_app() -> FastAPI:
         return {
             "status": "healthy",
             "service": settings.app_name,
-            "version": "0.1.0",
+            "version": "0.1.1",
             "storage": settings.storage_backend.value,
         }
 

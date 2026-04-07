@@ -129,7 +129,6 @@ graph TD
 ## Getting Started
 
 ### Prerequisites
-
 Python 3.11 or later. Docker is recommended for the complete stack but optional for core development.
 
 ### Installation
@@ -145,7 +144,7 @@ pip install --upgrade pip
 pip install -r requirements/base.txt
 pip install -e .
 cp .env.example .env
-
+```
 
 ### Running the API (development)
 
@@ -153,7 +152,7 @@ cp .env.example .env
 uvicorn derim.main:app --reload
 ```
 
-The service will be available at http://localhost:8000 (interactive documentation at /docs).
+The service will be available at `http://localhost:8000` (interactive documentation at `/docs`).
 
 ### Full Stack with Docker
 
@@ -175,7 +174,7 @@ pytest tests/ -v
 ## Project Structure
 
 ```
-DERIM-Middleware-project/
+derim-middleware/
 ├── src/derim/                  # Main application package
 │   ├── adapters/               # Protocol adapters
 │   ├── api/                    # FastAPI routes and dependencies

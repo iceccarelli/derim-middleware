@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "derim-middleware"
-version = "0.1.0"
+version = "0.1.1"
 description = "Smart Grid Digital Twin Middleware for Distributed Energy Resource Integration"
 readme = "README.md"
 license = {text = "MIT"}
@@ -68,18 +68,21 @@ dev = [
     "pytest-asyncio>=0.23.0",
     "pytest-cov>=4.1.0",
     "httpx>=0.25.0",
+    "ruff>=0.6.0",
     "black>=23.11.0",
     "isort>=5.12.0",
     "flake8>=6.1.0",
     "pre-commit>=3.6.0",
     "mypy>=1.7.0",
+    "bandit[toml]>=1.7.8",
+    "pip-audit>=2.7.0",
 ]
 
 [project.urls]
-Homepage = "https://github.com/iceccarelli/DERIM-Middleware-project"
-Documentation = "https://github.com/iceccarelli/DERIM-Middleware-project/tree/main/docs"
-Repository = "https://github.com/iceccarelli/DERIM-Middleware-project"
-Issues = "https://github.com/iceccarelli/DERIM-Middleware-project/issues"
+Homepage = "https://github.com/iceccarelli/derim-middleware"
+Documentation = "https://github.com/iceccarelli/derim-middleware/tree/main/docs"
+Repository = "https://github.com/iceccarelli/derim-middleware"
+Issues = "https://github.com/iceccarelli/derim-middleware/issues"
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -87,6 +90,23 @@ where = ["src"]
 [tool.black]
 line-length = 88
 target-version = ["py311"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B"]
+ignore = ["E501"]
+
+[tool.ruff.lint.per-file-ignores]
+"src/derim/api/routes/*.py" = ["B008"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
 
 [tool.isort]
 profile = "black"
@@ -102,3 +122,6 @@ python_version = "3.11"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
+ignore_missing_imports = true
+pretty = true
+show_error_codes = true
