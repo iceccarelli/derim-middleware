@@ -81,7 +81,7 @@ class OCPPAdapter(BaseAdapter):
     config : dict[str, Any]
         Configuration with keys:
 
-        - ``ws_host`` (str): WebSocket bind address (default ``"0.0.0.0"``).
+        - ``ws_host`` (str): WebSocket bind address (default ``"127.0.0.1"``).
         - ``ws_port`` (int): WebSocket port (default 9000).
         - ``charge_point_id`` (str): Expected charge point identity.
         - ``read_timeout`` (float): Seconds to wait for telemetry (default 30).
@@ -89,7 +89,7 @@ class OCPPAdapter(BaseAdapter):
 
     def __init__(self, device_id: str, config: Optional[dict[str, Any]] = None):
         super().__init__(device_id, config)
-        self._ws_host: str = self.config.get("ws_host", "0.0.0.0")
+        self._ws_host: str = self.config.get("ws_host", "127.0.0.1")
         self._ws_port: int = self.config.get("ws_port", 9000)
         self._cp_id: str = self.config.get("charge_point_id", "CP001")
         self._read_timeout: float = self.config.get("read_timeout", 30.0)

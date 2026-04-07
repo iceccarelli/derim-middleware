@@ -236,7 +236,7 @@ class Trainer:
         seq_len = self.settings.lstm_sequence_length
         if len(actual) <= seq_len:
             raise ValueError(
-                f"Test data must have more than {seq_len} rows. " f"Got {len(actual)}."
+                f"Test data must have more than {seq_len} rows. Got {len(actual)}."
             )
 
         input_values = actual[:seq_len].tolist()

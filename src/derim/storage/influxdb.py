@@ -52,12 +52,12 @@ class InfluxDBStorage(StorageBackend):
     def __init__(
         self,
         url: str = "http://localhost:8086",
-        token: str = "",
+        token: str | None = None,
         org: str = "derim",
         bucket: str = "derim_telemetry",
     ):
         self._url = url
-        self._token = token
+        self._token = token or ""
         self._org = org
         self._bucket = bucket
         self._client: Any = None

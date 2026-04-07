@@ -176,8 +176,8 @@ class TestOCPPAdapter:
         assert adapter._cp_id == "CP001"
 
     def test_default_config(self):
-        """OCPPAdapter with no config should use defaults."""
+        """OCPPAdapter with no config should use secure local defaults."""
         adapter = OCPPAdapter(device_id="ocpp-test-002")
-        assert adapter._ws_host == "0.0.0.0"
+        assert adapter._ws_host == "127.0.0.1"
         assert adapter._ws_port == 9000
         assert adapter._cp_id == "CP001"

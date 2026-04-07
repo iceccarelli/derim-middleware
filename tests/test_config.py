@@ -18,7 +18,7 @@ class TestSettings:
         settings = Settings()
         assert settings.app_name == "derim-middleware"
         assert settings.storage_backend == StorageBackendType.SQLITE
-        assert settings.app_host == "0.0.0.0"
+        assert settings.app_host == "127.0.0.1"
         assert settings.app_port == 8000
         assert settings.log_level == "INFO"
 

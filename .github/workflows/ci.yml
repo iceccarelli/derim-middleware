@@ -109,14 +109,20 @@ jobs:
 
       - name: Run pytest with coverage
         run: |
-          pytest tests/ -v \
+          python -m pytest tests/ -v \
             --cov=src/derim \
             --cov-report=xml:${{ env.COVERAGE_FILE }} \
             --cov-report=term-missing \
             --tb=short
 
-      - name: Upload coverage artifact
+      - name: Verify coverage artifact exists
         if: matrix.python-version == env.PYTHON_DEFAULT
+        run: |
+          test -f "${{ env.COVERAGE_FILE }}"
+          ls -lh "${{ env.COVERAGE_FILE }}"
+
+      - name: Upload coverage artifact
+        if: ${{ always() && matrix.python-version == env.PYTHON_DEFAULT }}
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report

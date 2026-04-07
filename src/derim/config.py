@@ -46,7 +46,7 @@ class Settings(BaseSettings):
     app_name: str = Field(default="derim-middleware", description="Application name")
     app_env: str = Field(default="development", description="Runtime environment")
     app_debug: bool = Field(default=False, description="Enable debug mode")
-    app_host: str = Field(default="0.0.0.0", description="API server bind address")
+    app_host: str = Field(default="127.0.0.1", description="API server bind address")
     app_port: int = Field(default=8000, description="API server port")
     log_level: str = Field(default="INFO", description="Logging level")
 
