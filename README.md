@@ -129,13 +129,14 @@ graph TD
 ## Getting Started
 
 ### Prerequisites
+
 Python 3.11 or later. Docker is recommended for the complete stack but optional for core development.
 
 ### Installation
 
 ```bash
-git clone https://github.com/iceccarelli/DERIM-Middleware-project.git
-cd DERIM-Middleware-project
+git clone https://github.com/iceccarelli/derim-middleware.git
+cd derim-middleware
 
 python -m venv .venv
 source .venv/bin/activate
@@ -144,7 +145,7 @@ pip install --upgrade pip
 pip install -r requirements/base.txt
 pip install -e .
 cp .env.example .env
-```
+
 
 ### Running the API (development)
 
