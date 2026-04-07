@@ -126,7 +126,7 @@ DERIM’s architecture is intentionally layered and modular, allowing each compo
 ```mermaid
 graph TD
     subgraph "Physical Layer"
-        DER[DER Hardware\n(Inverters, BESS, EV Chargers, Meters)]
+        DER[DER Hardware<br>(Inverters, BESS, EV Chargers, Meters)]
     end
     
     subgraph "DERIM Middleware"
@@ -135,20 +135,20 @@ graph TD
             Mqtt[MQTT Adapter]
             Sun[SunSpec Adapter]
             Ocpp[OCPP Adapter]
-            Future[Future Adapters\n(DNP3, IEC 61850, ...)]
+            Future[Future Adapters<br>(DNP3, IEC 61850, ...)]
         end
         
         Normaliser["Data Normaliser & CIM Mapper"]
         
         subgraph CoreServices["Core Services"]
-            API[REST + Future WebSocket API\n(FastAPI)]
-            Storage[Time-Series Storage\n(InfluxDB / SQLite)]
-            Twin[Digital Twin Engine\n(LSTM + Baselines + Simulation)]
+            API[REST + Future WebSocket API<br>(FastAPI)]
+            Storage[Time-Series Storage<br>(InfluxDB / SQLite)]
+            Twin[Digital Twin Engine<br>(LSTM + Baselines + Simulation)]
         end
     end
     
     subgraph "Application Layer"
-        Apps[External Applications\n(SCADA, VPP, DERMS, Dashboards, Mobile Apps)]
+        Apps[External Applications<br>(SCADA, VPP, DERMS, Dashboards, Mobile Apps)]
     end
     
     DER --> Adapters
@@ -162,7 +162,7 @@ graph TD
 ```mermaid
 flowchart LR
     A[Raw Protocol Data] --> B[Protocol Adapter]
-    B --> C[Normalization Service\n(CIM Mapping + Validation)]
+    B --> C[Normalization Service<br>(CIM Mapping + Validation)]
     C --> D{Data Enrichment}
     D --> E[Time-Series Storage]
     D --> F[REST API Exposure]
@@ -179,13 +179,13 @@ flowchart LR
 ```mermaid
 graph TD
     subgraph "Digital Twin Module"
-        Input[Normalized Telemetry Stream] --> Preprocess[Feature Engineering\n+ Contextual Metadata]
-        Preprocess --> Model[PyTorch LSTM Model\n(or Baseline)]
-        Model --> Forecast[Multi-horizon Forecast\n(up to 168h)]
+        Input[Normalized Telemetry Stream] --> Preprocess[Feature Engineering<br>+ Contextual Metadata]
+        Preprocess --> Model[PyTorch LSTM Model<br>(or Baseline)]
+        Model --> Forecast[Multi-horizon Forecast<br>(up to 168h)]
         Forecast --> Residual[Residual Analysis]
-        Residual --> Anomaly[Anomaly Detection\n(adaptive thresholds)]
+        Residual --> Anomaly[Anomaly Detection<br>(adaptive thresholds)]
         Anomaly --> Scenario[What-if Scenario Engine]
-        Scenario --> Output[Enriched Insights\n+ Control Recommendations]
+        Scenario --> Output[Enriched Insights<br>+ Control Recommendations]
     end
     Output -->|Feedback| Input
 ```
@@ -196,15 +196,15 @@ graph TD
 graph TB
     subgraph "Host / Cluster"
         subgraph "DERIM Services"
-            API[derim-api\n(FastAPI)]
+            API[derim-api<br>(FastAPI)]
             AdapterSvc[Adapter Runtime]
             TwinSvc[Digital Twin Worker]
         end
         subgraph "Supporting Services"
             Influx[(InfluxDB)]
-            Grafana[Grafana\n(Dashboards)]
-            Mosquitto[Mosquitto\n(MQTT Broker)]
-            Jupyter[Jupyter Lab\n(ML Experimentation)]
+            Grafana[Grafana<br>(Dashboards)]
+            Mosquitto[Mosquitto<br>(MQTT Broker)]
+            Jupyter[Jupyter Lab<br>(ML Experimentation)]
         end
     end
     API <--> Influx
