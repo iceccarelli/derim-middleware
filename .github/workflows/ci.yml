@@ -19,7 +19,7 @@ concurrency:
 env:
   PYTHON_DEFAULT: "3.11"
   PACKAGE_NAME: derim-middleware
-  COVERAGE_FILE: coverage.xml
+  COVERAGE_XML: coverage.xml
 
 jobs:
   lint:
@@ -111,22 +111,22 @@ jobs:
         run: |
           python -m pytest tests/ -v \
             --cov=src/derim \
-            --cov-report=xml:${{ env.COVERAGE_FILE }} \
+            --cov-report=xml:${{ env.COVERAGE_XML }} \
             --cov-report=term-missing \
             --tb=short
 
       - name: Verify coverage artifact exists
         if: matrix.python-version == env.PYTHON_DEFAULT
         run: |
-          test -f "${{ env.COVERAGE_FILE }}"
-          ls -lh "${{ env.COVERAGE_FILE }}"
+          test -f "${{ env.COVERAGE_XML }}"
+          ls -lh "${{ env.COVERAGE_XML }}"
 
       - name: Upload coverage artifact
         if: ${{ always() && matrix.python-version == env.PYTHON_DEFAULT }}
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
-          path: ${{ env.COVERAGE_FILE }}
+          path: ${{ env.COVERAGE_XML }}
           if-no-files-found: error
 
   package:
