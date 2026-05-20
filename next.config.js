@@ -1,7 +1,20 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  // Add any future config here
+  poweredByHeader: false,
+  
+  // Recommended for Vercel + monorepo setups
+  output: 'standalone',
+  
+  // Image optimization (uncomment when you add images later)
+  // images: {
+  //   remotePatterns: [
+  //     {
+  //       protocol: 'https',
+  //       hostname: 'derim.vercel.app',
+  //     },
+  //   ],
+  // },
 };
 
 module.exports = nextConfig;
