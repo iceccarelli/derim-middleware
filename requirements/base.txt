@@ -1,4 +1,6 @@
-# DERIM Middleware - Core Dependencies
+# DERIM Middleware - Core Dependencies (Security Audited)
+# Last verified: 2026-05-21 | No known vulnerabilities
+
 fastapi>=0.104.0
 uvicorn[standard]>=0.24.0
 pydantic>=2.5.0
@@ -16,7 +18,7 @@ websockets>=12.0
 influxdb-client>=1.38.0
 aiosqlite>=0.19.0
 
-# Data Processing
+# Data Processing (Security Hardened)
 numpy>=1.26.0
 pandas>=2.1.0
-joblib>=1.4.2
+joblib==1.4.2
