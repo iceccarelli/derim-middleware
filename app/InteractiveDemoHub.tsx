@@ -293,6 +293,10 @@ export default function InteractiveDemoHub() {
         setTimeout(() => {
           setIsConnected(true);
           setConnectionProgress(100);
+          
+          // Dispatch custom event so parent page can react (perfect integration)
+          window.dispatchEvent(new CustomEvent('derim-demo-connect'));
+          
           const initialTelemetry = generateTelemetry(selectedDevice);
           setTelemetry(initialTelemetry);
           setPowerHistory([initialTelemetry.power_kw]);
@@ -329,6 +333,9 @@ export default function InteractiveDemoHub() {
     setForecastHistory([]);
     setPacketLog([]);
     setIsStreaming(false);
+    
+    // Dispatch event to parent page
+    window.dispatchEvent(new CustomEvent('derim-demo-disconnect'));
   };
 
   // CIM Validation with detailed professional report
