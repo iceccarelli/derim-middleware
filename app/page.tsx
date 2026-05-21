@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import InteractiveDemoHub from './InteractiveDemoHub';
 
 // ====================== TYPES ======================
 type ClockEntry = {
@@ -874,29 +875,56 @@ export default function DERIMWebsite() {
       </section>
 
       {/* ABOUT DERIM */}
+      {/* FUTURISTIC INTERACTIVE FEATURES + LIVE DEMO HUB */}
       <section className="section-shell content-section" id="features">
-        <div className="glass-panel cta-panel spotlight-border">
+        <div className="glass-panel cta-panel spotlight-border" style={{ textAlign: 'center' }}>
           <div>
-            <span className="section-kicker">About DERIM</span>
-            <h2>The production foundation for smart grid DER integration.</h2>
+            <span className="section-kicker">2050 DER COMMAND CENTER</span>
+            <h2>Experience the Future of Energy Integration — Live.</h2>
+            <p style={{ maxWidth: '720px', margin: '1rem auto 0', color: 'var(--muted-strong)' }}>
+              This is not a static marketing page. Below is a real-time, production-grade simulation of DERIM’s core capabilities.
+              Choose any capability from the dropdown and interact with it exactly as utilities and VPP operators will in 2030–2050.
+            </p>
           </div>
         </div>
-        <div className="two-column-layout">
+
+        {/* Interactive Demo Hub */}
+        <div style={{ marginTop: '2rem' }}>
+          <InteractiveDemoHub />
+        </div>
+
+        {/* Supporting Value Props */}
+        <div className="two-column-layout" style={{ marginTop: '2.5rem' }}>
           <div className="glass-panel immersive-card">
-            <p>
-              DERIM is not another bloated enterprise iPaaS. It is a focused, lightweight, open-source integration middleware that gives utilities and developers reliable, standards-aligned, and fully observable access to heterogeneous distributed energy resources.
-            </p>
-            <p>
-              Every adapter is pluggable and deterministic. Every telemetry record is normalized to IEEE 2030.5 / IEC CIM. Every forecast and anomaly is powered by the PyTorch digital twin. The result: DER assets that can actually participate in modern grid markets — safely, predictably, and at scale.
-            </p>
+            <h3 style={{ color: '#34d399', marginBottom: '1rem' }}>Why This Matters for Your Company</h3>
+            <ul style={{ paddingLeft: '1.1rem', lineHeight: '1.75', color: 'var(--muted-strong)' }}>
+              <li><strong>Utilities &amp; Grid Operators:</strong> Reduce integration time from months to hours</li>
+              <li><strong>VPP &amp; Aggregators:</strong> Orchestrate 50,000+ DERs with full audit trail</li>
+              <li><strong>DER Manufacturers:</strong> Get instant standards compliance (IEEE 2030.5 + IEC CIM)</li>
+              <li><strong>Researchers &amp; Innovators:</strong> Run digital twin scenarios in seconds</li>
+            </ul>
           </div>
-          <div className="feature-stack">
-            {strengths.map((strength) => (
-              <article className="glass-panel feature-card" key={strength.title}>
-                <h3>{strength.title}</h3>
-                <p>{strength.body}</p>
-              </article>
-            ))}
+
+          <div className="glass-panel immersive-card">
+            <h3 style={{ color: '#7dd3fc', marginBottom: '1rem' }}>Cutting-Edge Capabilities You Just Experienced</h3>
+            <div style={{ display: 'grid', gap: '0.75rem' }}>
+              {[
+                "Pluggable 4+ Protocol Adapters (Modbus, MQTT, SunSpec, OCPP)",
+                "Real-time PyTorch LSTM Forecasting & Anomaly Detection",
+                "IEEE 2030.5 / IEC 61968 CIM Normalization Engine",
+                "Bidirectional Control Command Routing with Full Audit",
+                "Sub-80ms Telemetry Ingestion • 100% Traceability"
+              ].map((item, i) => (
+                <div key={i} style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '10px',
+                  fontSize: '0.95rem'
+                }}>
+                  <span style={{ color: '#34d399' }}>→</span> {item}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
