@@ -245,17 +245,6 @@ export default function InteractiveDemoHub() {
         const score = Math.max(0, Math.min(100, parseFloat(baseAnomaly.toFixed(1))));
         setAnomalyScore(score);
 
-        // Auto-append packet log in streaming mode
-        if (isStreaming && selectedMode === 'adapter') {
-          const protocols = [selectedProtocol, 'MQTT 5.0', 'SunSpec'];
-          const newPacket: PacketLog = {
-            timestamp: new Date().toLocaleTimeString('en-US', { hour12: false }),
-            protocol: protocols[Math.floor(Math.random() * protocols.length)],
-            message: `TELEMETRY_UPDATE ${newTelemetry.power_kw.toFixed(1)}kW @ ${newTelemetry.voltage}V`,
-            direction: 'IN'
-          };
-          setPacketLog(prev => [newPacket, ...prev].slice(0, 8));
-        }
       }, 1650);
 
       return () => {
@@ -263,6 +252,20 @@ export default function InteractiveDemoHub() {
       };
     }
   }, [selectedMode, isConnected, selectedDevice, selectedProtocol, isStreaming, generateTelemetry]);
+
+  // Separate effect for packet log streaming (avoids TypeScript narrowing issue)
+  useEffect(() => {
+    if (!isStreaming || selectedMode !== 'adapter' || !telemetry) return;
+
+    const protocols = [selectedProtocol, 'MQTT 5.0', 'SunSpec'];
+    const newPacket: PacketLog = {
+      timestamp: new Date().toLocaleTimeString('en-US', { hour12: false }),
+      protocol: protocols[Math.floor(Math.random() * protocols.length)],
+      message: `TELEMETRY_UPDATE ${telemetry.power_kw.toFixed(1)}kW @ ${telemetry.voltage}V`,
+      direction: 'IN'
+    };
+    setPacketLog(prev => [newPacket, ...prev].slice(0, 8));
+  }, [isStreaming, selectedMode, telemetry, selectedProtocol]);
 
   // Connection simulation with realistic progress
   const handleConnect = () => {
