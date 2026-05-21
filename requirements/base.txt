@@ -1,5 +1,5 @@
-# DERIM Middleware - Core Dependencies (Security Audited)
-# Last verified: 2026-05-21 | No known vulnerabilities
+# DERIM Middleware - Core Dependencies
+# Security: All packages audited (last verified 2026-05-21)
 
 fastapi>=0.104.0
 uvicorn[standard]>=0.24.0
@@ -21,4 +21,4 @@ aiosqlite>=0.19.0
 # Data Processing (Security Hardened)
 numpy>=1.26.0
 pandas>=2.1.0
-joblib==1.4.2
+joblib==1.5.2
