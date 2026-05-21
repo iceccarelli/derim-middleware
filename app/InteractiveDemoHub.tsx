@@ -636,14 +636,15 @@ export default function InteractiveDemoHub() {
     triggerSuccess();
     
     // Add system packet
-    setPacketLog(prev => [{
+    const systemPacket: PacketLog = {
       timestamp: new Date().toLocaleTimeString('en-US', { hour12: false }),
       protocol: 'DERIM-ML',
       message: 'MODEL_RETRAINED LSTM v2.4.1 • 47 days data • new weights deployed',
       direction: 'IN',
       size_bytes: 1240,
       latency_ms: 1240
-    }, ...prev].slice(0, 9));
+    };
+    setPacketLog(prev => [systemPacket, ...prev].slice(0, 9));
   };
 
   // Export enhanced CSV + optional JSON
