@@ -1,0 +1,33 @@
+# Render.com Blueprint — deploys the DERIM FastAPI backend from the Dockerfile.
+# Usage: push to GitHub, then in Render: New > Blueprint > pick this repo.
+# Docs: https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: derim-middleware-api
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    # Honor Render's injected $PORT (falls back to 8000 for local docker runs).
+    dockerCommand: sh -c "uvicorn derim.main:app --host 0.0.0.0 --port ${PORT:-8000}"
+    plan: free
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: LOG_LEVEL
+        value: INFO
+      - key: STORAGE_BACKEND
+        value: sqlite
+      - key: SQLITE_DB_PATH
+        value: /app/data/derim.db
+      # Origins allowed to call this API. Add your custom domain here later.
+      - key: CORS_ORIGINS
+        value: https://derim-middleware.vercel.app,http://localhost:3000
+
+# Notes:
+# - Free Docker web services sleep after inactivity (cold start ~50s) and use an
+#   ephemeral filesystem, so the SQLite DB resets on redeploy. Fine for a public
+#   demo/sandbox API. For persistent data, switch STORAGE_BACKEND to influxdb or
+#   add a paid disk and point SQLITE_DB_PATH at the mounted path.

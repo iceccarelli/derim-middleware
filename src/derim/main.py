@@ -78,11 +78,13 @@ def create_app() -> FastAPI:
         lifespan=lifespan,
     )
 
-    # CORS - allow all origins in development; restrict in production.
+    # CORS - allow all origins in debug; use the configured allowlist otherwise.
+    # allow_credentials is False so a "*" origin stays spec-compliant and the
+    # deployed API can be called from the frontend without cookie auth.
     application.add_middleware(
         CORSMiddleware,
-        allow_origins=["*"] if settings.app_debug else [],
-        allow_credentials=True,
+        allow_origins=["*"] if settings.app_debug else settings.cors_origins_list,
+        allow_credentials=False,
         allow_methods=["*"],
         allow_headers=["*"],
     )

@@ -45,3 +45,13 @@ class TestSettings:
         """Model save directory should be configurable."""
         settings = Settings(model_save_dir=str(tmp_path / "models"))
         assert "models" in settings.model_save_dir
+
+    def test_cors_origins_parsing(self):
+        """cors_origins_list should split the comma-separated string and trim."""
+        settings = Settings(cors_origins="https://a.com, https://b.com ,")
+        assert settings.cors_origins_list == ["https://a.com", "https://b.com"]
+
+    def test_cors_origins_default_includes_frontend(self):
+        """The default allowlist must include the deployed frontend origin."""
+        settings = Settings()
+        assert "https://derim-middleware.vercel.app" in settings.cors_origins_list

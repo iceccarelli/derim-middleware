@@ -49,6 +49,10 @@ class Settings(BaseSettings):
     app_host: str = Field(default="127.0.0.1", description="API server bind address")
     app_port: int = Field(default=8000, description="API server port")
     log_level: str = Field(default="INFO", description="Logging level")
+    cors_origins: str = Field(
+        default="http://localhost:3000,https://derim-middleware.vercel.app",
+        description="Comma-separated list of allowed CORS origins (used when not in debug)",
+    )
 
     # --- Storage ---
     storage_backend: StorageBackendType = Field(
@@ -126,6 +130,11 @@ class Settings(BaseSettings):
         default=96,
         description="Number of time steps in each LSTM input sequence",
     )
+
+    @property
+    def cors_origins_list(self) -> list[str]:
+        """Parse the comma-separated ``cors_origins`` string into a list."""
+        return [o.strip() for o in self.cors_origins.split(",") if o.strip()]
 
 
 @lru_cache()
