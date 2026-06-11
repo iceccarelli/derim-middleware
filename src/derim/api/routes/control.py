@@ -7,11 +7,12 @@ Endpoints
 
 Control commands are dispatched to the appropriate protocol adapter
 based on the device's registered protocol.  If no adapter is available,
-the command is acknowledged but logged as undeliverable.
+the command is rejected; if the device is unreachable, an error is returned.
 """
 
 from fastapi import APIRouter, Depends, HTTPException
 
+from derim.adapters.dispatch import dispatch_command
 from derim.api.dependencies import get_storage
 from derim.models.common import CommandRequest, CommandResponse
 from derim.storage.base import StorageBackend
@@ -46,14 +47,14 @@ async def send_command(
     storage: StorageBackend = Depends(get_storage),
 ) -> CommandResponse:
     """
-    Process and dispatch a control command.
+    Validate and dispatch a control command to the device's adapter.
 
-    In a production deployment, this handler would look up the device's
-    registered protocol adapter and call ``adapter.write_command()``.
-    For the current release, the command is validated, logged, and
-    acknowledged.  Adapter routing will be added in a future version.
+    The command type is validated, then routed to the protocol adapter
+    registered for ``device.protocol``. The adapter connects to the device,
+    writes the command, and disconnects; its result is returned. Devices
+    with no configured adapter are rejected, and unreachable devices yield
+    an ``error`` status with the underlying cause.
     """
-    # Verify that the device exists.
     device = await storage.get_device(device_id)
     if device is None:
         raise HTTPException(
@@ -61,7 +62,6 @@ async def send_command(
             detail=f"Device '{device_id}' not found. Register it first.",
         )
 
-    # Validate command type.
     valid_commands = {
         "setpoint",
         "on",
@@ -87,23 +87,5 @@ async def send_command(
             ),
         )
 
-    # TODO: Route to the actual protocol adapter based on device.protocol.
-    # For now, we acknowledge the command and log it.
-    logger.info(
-        "api_command_dispatched",
-        device_id=device_id,
-        command=command.command,
-        value=command.value,
-        protocol=device.protocol,
-    )
-
-    return CommandResponse(
-        device_id=device_id,
-        command=command.command,
-        status="accepted",
-        message=(
-            f"Command '{command.command}' accepted for device "
-            f"'{device_id}' (protocol: {device.protocol or 'N/A'}). "
-            "Adapter dispatch pending."
-        ),
-    )
+    # Route to the device's protocol adapter and dispatch the command.
+    return await dispatch_command(device, command)

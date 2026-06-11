@@ -136,21 +136,103 @@ class TestControlEndpoints:
     """Tests for device control commands."""
 
     def test_send_valid_command(self, api_client: TestClient):
-        """POST /control/{device_id} should accept valid commands."""
-        # Register device first.
+        """A valid command on a device with a working adapter is accepted."""
+        from derim.adapters.base import BaseAdapter
+        from derim.adapters.registry import ADAPTER_REGISTRY
+        from derim.models.common import CommandResponse
+
+        class _FakeAdapter(BaseAdapter):
+            async def connect(self):
+                self._connected = True
+
+            async def disconnect(self):
+                self._connected = False
+
+            async def read_data(self):  # not used here
+                raise NotImplementedError
+
+            async def write_command(self, command):
+                return CommandResponse(
+                    device_id=self.device_id,
+                    command=command.command,
+                    status="accepted",
+                    message="Setpoint written to device.",
+                )
+
+        ADAPTER_REGISTRY["sim"] = _FakeAdapter
+        try:
+            device = {
+                "device_id": "ctrl-001",
+                "device_type": "solar_pv",
+                "name": "Control Test",
+                "protocol": "sim",
+                "state": "on",
+            }
+            api_client.post("/api/v1/devices", json=device)
+
+            cmd = {"command": "setpoint", "value": 3.5}
+            resp = api_client.post("/api/v1/control/ctrl-001", json=cmd)
+            assert resp.status_code == 200
+            data = resp.json()
+            assert data["status"] == "accepted"
+            assert "written" in (data["message"] or "").lower()
+        finally:
+            ADAPTER_REGISTRY.pop("sim", None)
+
+    def test_command_no_adapter_is_rejected(self, api_client: TestClient):
+        """A device with no configured protocol adapter is rejected, not faked."""
         device = {
-            "device_id": "ctrl-001",
+            "device_id": "ctrl-noproto",
             "device_type": "solar_pv",
-            "name": "Control Test",
+            "name": "No Protocol",
             "state": "on",
         }
         api_client.post("/api/v1/devices", json=device)
 
-        cmd = {"command": "setpoint", "value": 3.5}
-        resp = api_client.post("/api/v1/control/ctrl-001", json=cmd)
+        resp = api_client.post("/api/v1/control/ctrl-noproto", json={"command": "on"})
         assert resp.status_code == 200
         data = resp.json()
-        assert data["status"] == "accepted"
+        assert data["status"] == "rejected"
+        assert "adapter" in (data["message"] or "").lower()
+
+    def test_command_unreachable_device_errors(self, api_client: TestClient):
+        """If the adapter cannot connect, the response is an honest error."""
+        from derim.adapters.base import BaseAdapter
+        from derim.adapters.registry import ADAPTER_REGISTRY
+
+        class _UnreachableAdapter(BaseAdapter):
+            async def connect(self):
+                raise ConnectionError("connection refused")
+
+            async def disconnect(self):
+                self._connected = False
+
+            async def read_data(self):
+                raise NotImplementedError
+
+            async def write_command(self, command):  # never reached
+                raise NotImplementedError
+
+        ADAPTER_REGISTRY["down"] = _UnreachableAdapter
+        try:
+            device = {
+                "device_id": "ctrl-down",
+                "device_type": "battery",
+                "name": "Unreachable",
+                "protocol": "down",
+                "state": "on",
+            }
+            api_client.post("/api/v1/devices", json=device)
+
+            resp = api_client.post(
+                "/api/v1/control/ctrl-down", json={"command": "charge"}
+            )
+            assert resp.status_code == 200
+            data = resp.json()
+            assert data["status"] == "error"
+            assert "could not reach" in (data["message"] or "").lower()
+        finally:
+            ADAPTER_REGISTRY.pop("down", None)
 
     def test_send_unknown_command(self, api_client: TestClient):
         """Unknown commands should be rejected."""
