@@ -383,7 +383,7 @@ These notebooks are regularly maintained and serve as both tutorials and startin
 
 ## Use Cases
 
-DERIM has already proven valuable in real deployments:
+DERIM is designed to support the following use cases:
 
 - **Multi-vendor DER fleet orchestration** – unified visibility and control
 - **Solar + storage forecasting for market participation**

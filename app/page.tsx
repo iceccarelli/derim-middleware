@@ -159,25 +159,25 @@ const marketThemes = [
 
 const fallbackHeadlines: Headline[] = [
   {
-    title: 'DERIM v0.1.1 released — 4 production adapters, PyTorch Digital Twin, and full CIM normalization now live',
+    title: 'DERIM v0.1.1 released — 4 protocol adapters (Modbus, MQTT, SunSpec, OCPP), digital-twin baseline, and CIM normalization',
     link: 'https://github.com/iceccarelli/derim-middleware/releases',
-    pubDate: 'Live source',
+    pubDate: 'Release notes',
     source: 'DERIM',
     category: 'Release',
   },
   {
-    title: 'SunSpec Alliance lists DERIM as reference implementation for standardized solar + storage telemetry',
-    link: 'https://github.com/iceccarelli/derim-middleware',
-    pubDate: 'Live source',
-    source: 'SunSpec',
-    category: 'Ecosystem',
+    title: 'Open source under the MIT license — adapter ports, issue reports, and contributions welcome',
+    link: 'https://github.com/iceccarelli/derim-middleware/blob/main/CONTRIBUTING.md',
+    pubDate: 'Project',
+    source: 'DERIM',
+    category: 'Community',
   },
   {
-    title: 'California ISO evaluates DERIM for multi-vendor DER orchestration in 2026 grid modernization pilots',
-    link: 'https://github.com/iceccarelli/derim-middleware',
-    pubDate: 'Live source',
-    source: 'CAISO',
-    category: 'Integration',
+    title: 'Roadmap: DNP3 & IEC 61850 adapters, native WebSocket streaming, and OpenADR 2.0b demand response',
+    link: 'https://github.com/iceccarelli/derim-middleware#roadmap',
+    pubDate: 'Roadmap',
+    source: 'DERIM',
+    category: 'Roadmap',
   },
 ];
 
@@ -896,7 +896,7 @@ export default function DERIMWebsite() {
             <span className="section-kicker">2050 DER COMMAND CENTER</span>
             <h2>Experience the Future of Energy Integration — Live &amp; Interactive.</h2>
             <p style={{ maxWidth: '780px', margin: '1rem auto 0', color: 'var(--muted-strong)', fontSize: '1.05rem' }}>
-              This is not a static marketing page. Below is a <strong>real-time, production-grade simulation</strong> of DERIM’s core capabilities — exactly as they run in the open-source middleware.
+              This interactive panel is a browser-side simulation built on illustrative data. It mirrors the architecture, data models, and message shapes of the open-source middleware — wire it to a running DERIM backend to drive it with live telemetry.
               Choose any capability from the dropdown and interact with it exactly as utilities and VPP operators will in 2030–2050.
             </p>
             {demoConnected && (
@@ -957,7 +957,7 @@ export default function DERIMWebsite() {
               <li><strong>Control Center</strong> → Real <code>/api/v1/control/</code> endpoint with audit logging</li>
             </ul>
             <p style={{ marginTop: '1rem', fontSize: '0.9rem', color: '#64748b' }}>
-              Every action you perform here is architecturally identical to what runs in production DERIM instances.
+              Every action here mirrors the architecture and data models of the open-source codebase. Connect a running DERIM backend to operate on live data.
             </p>
           </div>
 

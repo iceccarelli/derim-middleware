@@ -1089,7 +1089,7 @@ export default function InteractiveDemoHub() {
           lineHeight: 1.55
         }}>
           Real-time simulation of <span className="text-[#34d399] font-semibold">DERIM middleware</span> — the production-grade integration layer for solar, storage &amp; EV fleets.<br />
-          <span className="text-xs text-[#64748b]">Mirrors exact behavior of the open-source Python/FastAPI + PyTorch stack running on Vercel + edge infrastructure.</span>
+          <span className="text-xs text-[#64748b]">Mirrors the architecture and data models of the open-source Python/FastAPI + PyTorch stack. This panel runs on illustrative data in your browser.</span>
         </p>
       </div>
 
@@ -1593,7 +1593,7 @@ export default function InteractiveDemoHub() {
                 </div>
               )}
 
-              <div className="text-[10px] text-center text-[#64748b] mt-5">Responses are live from the production DERIM instance (this demo mirrors it exactly)</div>
+              <div className="text-[10px] text-center text-[#64748b] mt-5">Illustrative responses generated in your browser — wire up a running DERIM backend to see live results</div>
             </div>
           </div>
         )}
@@ -1602,7 +1602,7 @@ export default function InteractiveDemoHub() {
       {/* Bottom Bar */}
       <div className="mt-6 flex justify-between items-center text-xs text-[#64748b]">
         <div>
-          High-fidelity simulation of DERIM’s production stack. All data, protocols, and responses are architecturally accurate to the open-source repository.
+          Browser-side simulation using illustrative data. Protocols, data models, and message shapes mirror the open-source repository.
         </div>
         
         <div className="flex items-center gap-4">
