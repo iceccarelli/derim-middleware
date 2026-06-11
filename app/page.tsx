@@ -189,7 +189,7 @@ const fallbackRepos: RepoCard[] = [
     html_url: 'https://github.com/iceccarelli/derim-middleware',
     updated_at: new Date().toISOString(),
     language: 'Python',
-    stargazers_count: 1247,
+    stargazers_count: 0,
   },
 ];
 
@@ -756,7 +756,7 @@ export default function DERIMWebsite() {
             html_url: repo.html_url || 'https://github.com/iceccarelli/derim-middleware',
             updated_at: repo.updated_at || new Date().toISOString(),
             language: repo.language || 'Python',
-            stargazers_count: repo.stargazers_count || 1247,
+            stargazers_count: repo.stargazers_count || 0,
           }]);
         }
 

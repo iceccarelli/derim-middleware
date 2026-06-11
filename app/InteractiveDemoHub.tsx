@@ -201,7 +201,7 @@ export default function InteractiveDemoHub() {
             : 'May 20';
           
           setGithubStats({
-            stars: repoData.stargazers_count || 1247,
+            stars: repoData.stargazers_count || 0,
             forks: repoData.forks_count || 89,
             updated: new Date(repoData.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
             lastCommit: lastCommitDate
@@ -209,7 +209,7 @@ export default function InteractiveDemoHub() {
         }
       } catch (e) {
         setGithubStats({
-          stars: 1247,
+          stars: 0,
           forks: 89,
           updated: 'May 20',
           lastCommit: 'May 18'
