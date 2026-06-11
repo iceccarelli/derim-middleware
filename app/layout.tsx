@@ -4,7 +4,7 @@ import Header from './Header';
 import './globals.css';
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://derim.vercel.app'),
+  metadataBase: new URL('https://derim-middleware.vercel.app'),
   title: {
     default: 'DERIM | Distributed Energy Resource Integration Middleware for Smart Grids',
     template: '%s | DERIM',
@@ -39,13 +39,13 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'DERIM | Distributed Energy Resource Integration Middleware',
     description: 'The missing middleware layer for smart grids. Securely bridge solar, storage, and EV assets to SCADA, VPPs, and DERMS with standardized adapters, CIM models, and AI-powered digital twins. Open source on GitHub. Try the live interactive demo.',
-    url: 'https://derim.vercel.app/',
+    url: 'https://derim-middleware.vercel.app/',
     siteName: 'DERIM',
     locale: 'en_GB',
     type: 'website',
     images: [
       {
-        url: 'https://derim.vercel.app/og-image.jpg',
+        url: 'https://derim-middleware.vercel.app/og-image.jpg',
         width: 1200,
         height: 630,
         alt: 'DERIM - Live Interactive DER Command Center for Smart Grids',
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'DERIM | Smart Grid DER Middleware • Live Demo',
     description: 'Connect any DER hardware to any grid system. Adapters • CIM • Digital Twin • FastAPI. Open source. Experience the 2050 Command Center.',
-    images: ['https://derim.vercel.app/og-image.jpg'],
+    images: ['https://derim-middleware.vercel.app/og-image.jpg'],
   },
   icons: {
     icon: '/favicon.ico',
@@ -69,7 +69,7 @@ const structuredData = {
   '@context': 'https://schema.org',
   '@type': 'SoftwareApplication',
   name: 'DERIM',
-  url: 'https://derim.vercel.app/',
+  url: 'https://derim-middleware.vercel.app/',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Cross-platform',
   offers: {
@@ -93,10 +93,10 @@ const structuredData = {
     'Production-Grade FastAPI REST API with OpenAPI 3.1',
     'Full Observability: Structured Logging, Prometheus Metrics, Grafana Dashboards',
     'Docker-First Containerized Deployment with Monitoring & ML Profiles',
-    '79+ Tests with 100% Coverage on Critical Paths',
+    '79+ Unit & Integration Tests Across Core Modules',
     'Live Interactive Command Center Demo (Multi-device, Real-time Charts, CIM Validation, Control Center)',
   ],
-  screenshot: 'https://derim.vercel.app/og-image.jpg',
+  screenshot: 'https://derim-middleware.vercel.app/og-image.jpg',
   softwareVersion: '0.1.1',
   releaseNotes: 'https://github.com/iceccarelli/derim-middleware/releases',
 };

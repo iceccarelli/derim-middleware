@@ -54,7 +54,7 @@ const strengths = [
   },
   {
     title: 'Production-Grade Observability',
-    body: 'Structured JSON logging, Prometheus metrics, Grafana dashboards, and 79+ tests with 100% coverage on critical paths. Built for utilities that demand reliability and auditability.',
+    body: 'Structured JSON logging, Prometheus metrics, Grafana dashboards, and 79+ unit and integration tests across adapters, API, CIM models, storage, and the digital twin. Built for utilities that demand reliability and auditability.',
   },
 ];
 
@@ -1176,7 +1176,7 @@ export default function DERIMWebsite() {
           <div className="impact-dashboard">
             <div className="impact-card"><strong>&lt;80ms</strong><br/>average telemetry ingestion latency (local)</div>
             <div className="impact-card"><strong>4+</strong><br/>production-ready protocol adapters out of the box</div>
-            <div className="impact-card"><strong>79+</strong><br/>tests with 100% coverage on critical paths</div>
+            <div className="impact-card"><strong>79+</strong><br/>unit &amp; integration tests across all core modules</div>
             <div className="impact-card"><strong>Zero</strong><br/>vendor lock-in — full IEEE 2030.5 &amp; IEC CIM compliance</div>
           </div>
         </div>

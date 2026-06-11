@@ -1036,7 +1036,7 @@ export default function InteractiveDemoHub() {
               letterSpacing: '1.4px',
               color: '#34d399'
             }}>
-              DERIM v2.9.1
+              DERIM v0.1.1
             </span>
             <span style={{ 
               background: 'rgba(52, 211, 153, 0.15)', 
@@ -1458,7 +1458,7 @@ export default function InteractiveDemoHub() {
                   </details>
                 )}
 
-                <div className="text-[10px] text-[#64748b] mt-5">Processed by DERIM v2.9.1 • 2 issues auto-corrected • Event ID: CIM-{Date.now().toString(36).toUpperCase()}</div>
+                <div className="text-[10px] text-[#64748b] mt-5">Processed by DERIM v0.1.1 • 2 issues auto-corrected • Event ID: CIM-{Date.now().toString(36).toUpperCase()}</div>
               </div>
             )}
 
