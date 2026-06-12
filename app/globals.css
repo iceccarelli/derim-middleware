@@ -1119,3 +1119,15 @@ small {
   .hero-bridge__media, .hero-bridge__node, .hero-bridge__live-dot { animation: none !important; }
   .hero-bridge__flow i { display: none; }
 }
+
+/* ---------- Hero media: crossfade across the shared rotating pool ---------- */
+.hero-bridge__media {
+  background-image: none;
+  opacity: 0;
+  transition: opacity 1.4s ease-in-out;
+  will-change: opacity, transform;
+}
+.hero-bridge__media.is-active { opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .hero-bridge__media { animation: none !important; }
+}
