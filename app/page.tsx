@@ -914,30 +914,30 @@ export default function DERIMWebsite() {
         </div>
 
         {/* Interactive Demo Hub - PERFECTLY INTEGRATED */}
-        <div style={{ 
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '14px' }}>
+          <div style={{
+            background: 'rgba(7,12,23,0.95)',
+            padding: '6px 22px',
+            borderRadius: '9999px',
+            border: '1px solid rgba(52, 211, 153, 0.4)',
+            fontSize: '0.75rem',
+            color: '#34d399',
+            fontWeight: 700,
+            letterSpacing: '0.5px',
+            textAlign: 'center',
+            maxWidth: '100%'
+          }}>
+            INTERACTIVE SIMULATION • ILLUSTRATIVE DATA • MIRRORS DERIM v0.1.1 ARCHITECTURE
+          </div>
+        </div>
+
+        <div style={{
           position: 'relative',
           border: '2px solid rgba(52, 211, 153, 0.3)',
           borderRadius: '24px',
           padding: '4px',
           background: 'linear-gradient(145deg, rgba(7,12,23,0.95), rgba(10,18,33,0.92))'
         }}>
-          <div style={{ 
-            position: 'absolute', 
-            top: '-12px', 
-            left: '50%', 
-            transform: 'translateX(-50%)',
-            background: 'rgba(7,12,23,0.95)',
-            padding: '4px 20px',
-            borderRadius: '9999px',
-            border: '1px solid rgba(52, 211, 153, 0.4)',
-            fontSize: '0.75rem',
-            color: '#34d399',
-            fontWeight: 700,
-            letterSpacing: '0.5px'
-          }}>
-            INTERACTIVE SIMULATION • ILLUSTRATIVE DATA • MIRRORS DERIM v0.1.1 ARCHITECTURE
-          </div>
-          
           <InteractiveDemoHub />
         </div>
 
