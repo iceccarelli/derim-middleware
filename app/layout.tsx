@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import Header from './Header';
+import CinematicBackground from './CinematicBackground';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -106,6 +107,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en">
       <body>
         <div className="site-chrome">
+          <CinematicBackground />
           <div className="background-orb orb-one" />
           <div className="background-orb orb-two" />
           <div className="background-orb orb-three" />

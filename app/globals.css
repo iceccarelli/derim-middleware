@@ -1011,3 +1011,40 @@ small {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* ---------- Cinematic rotating background ---------- */
+.cinematic-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.cinematic-bg__layer {
+  position: absolute;
+  inset: -2%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 1.4s ease-in-out;
+  will-change: opacity, transform;
+}
+.cinematic-bg__layer.is-active { opacity: 1; }
+.cinematic-bg__layer.is-animated {
+  animation: derim-kenburns 26s ease-in-out infinite alternate;
+}
+@keyframes derim-kenburns {
+  from { transform: scale(1.05) translateY(0); }
+  to   { transform: scale(1.16) translateY(-1.4%); }
+}
+.cinematic-bg__scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(7, 17, 31, 0.70) 0%, rgba(9, 21, 35, 0.80) 50%, rgba(5, 11, 21, 0.93) 100%),
+    radial-gradient(130% 90% at 50% 8%, rgba(7, 17, 31, 0.28) 0%, rgba(7, 17, 31, 0.86) 100%);
+}
+@media (prefers-reduced-motion: reduce) {
+  .cinematic-bg__layer { transition: opacity 0.01ms; animation: none !important; }
+}
