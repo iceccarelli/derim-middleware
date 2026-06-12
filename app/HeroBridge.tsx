@@ -1,17 +1,17 @@
 'use client';
 
-import { useSyncExternalStore } from 'react';
-import {
-  CINEMATIC_SOURCES, CINEMATIC_PARAMS, HERO_OFFSET,
-  activeIndex, getServerTick, getTick, subscribeTick,
-} from './cinematic';
+import { useEffect, useSyncExternalStore } from 'react';
+import { HERO_SOURCES, CINEMATIC_PARAMS, heroRotator, pick } from './cinematic';
 
 export default function HeroBridge() {
-  const tick = useSyncExternalStore(subscribeTick, getTick, getServerTick);
-  const active = activeIndex(tick, HERO_OFFSET);
+  const r = heroRotator;
+  const tick = useSyncExternalStore(r.subscribe, r.getTick, r.getServerTick);
+  useEffect(() => { r.activate(); }, [r]);
+  const active = pick(HERO_SOURCES, r.getOrder(), tick);
+
   return (
     <div className="hero-portrait-shell hero-bridge">
-      {CINEMATIC_SOURCES.map((src, i) => (
+      {HERO_SOURCES.map((src, i) => (
         <div
           key={src}
           className={'hero-bridge__media' + (i === active ? ' is-active' : '')}

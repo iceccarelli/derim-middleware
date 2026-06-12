@@ -1,18 +1,17 @@
 'use client';
 
 import { useEffect, useSyncExternalStore } from 'react';
-import {
-  CINEMATIC_SOURCES, CINEMATIC_PARAMS, activeIndex,
-  activateCinematic, getServerTick, getTick, subscribeTick,
-} from './cinematic';
+import { BACKGROUND_SOURCES, CINEMATIC_PARAMS, backgroundRotator, pick } from './cinematic';
 
 export default function CinematicBackground() {
-  const tick = useSyncExternalStore(subscribeTick, getTick, getServerTick);
-  useEffect(() => { activateCinematic(); }, []);
-  const active = activeIndex(tick, 0);
+  const r = backgroundRotator;
+  const tick = useSyncExternalStore(r.subscribe, r.getTick, r.getServerTick);
+  useEffect(() => { r.activate(); }, [r]);
+  const active = pick(BACKGROUND_SOURCES, r.getOrder(), tick);
+
   return (
     <div className="cinematic-bg" aria-hidden="true">
-      {CINEMATIC_SOURCES.map((src, i) => (
+      {BACKGROUND_SOURCES.map((src, i) => (
         <div
           key={src}
           className={'cinematic-bg__layer is-animated' + (i === active ? ' is-active' : '')}
