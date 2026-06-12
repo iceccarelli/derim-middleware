@@ -406,6 +406,7 @@ a {
 .hero-copy h1 {
   max-width: 18ch;
   font-size: clamp(3rem, 6vw, 5.2rem);
+  overflow-wrap: break-word;
 }
 
 .gradient-text {
@@ -932,12 +933,11 @@ small {
   .mini-note-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  .topbar-inner {
-    flex-wrap: wrap;
-  }
   .topbar-nav {
-    width: 100%;
-    justify-content: flex-start;
+    display: none;
+  }
+  .hamburger {
+    display: flex;
   }
   .footer-content {
     grid-template-columns: repeat(2, 1fr);
@@ -985,7 +985,7 @@ small {
     min-width: 82vw;
   }
   .brand-copy small {
-    white-space: normal;
+    display: none;
   }
   .topbar-nav {
     gap: 0.8rem;
@@ -994,9 +994,11 @@ small {
     flex-direction: column;
   }
   .primary-button,
-  .secondary-button,
-  .topbar-button {
+  .secondary-button {
     width: 100%;
+  }
+  .topbar-button {
+    display: none;
   }
   .hamburger {
     display: flex;
