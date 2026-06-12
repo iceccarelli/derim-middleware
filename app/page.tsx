@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import HeroBridge from './HeroBridge';
 import InteractiveDemoHub from './InteractiveDemoHub';
 
 // ====================== TYPES ======================
@@ -839,13 +840,7 @@ export default function DERIMWebsite() {
           </div>
 
           <aside className="glass-panel spotlight-border hero-panel">
-            <div className="hero-portrait-shell" style={{ background: 'linear-gradient(180deg, rgba(16,185,129,0.1), rgba(7,12,23,0.95))', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <div style={{ textAlign: 'center', padding: '2rem' }}>
-                <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>🌞⚡🔋</div>
-                <div style={{ fontSize: '1.1rem', fontWeight: 600, color: '#34d399' }}>DERIM</div>
-                <div style={{ fontSize: '0.9rem', color: 'var(--muted)' }}>Live DER ↔ Smart Grid Bridge</div>
-              </div>
-            </div>
+            <HeroBridge />
 
             <div style={{ marginTop: '1.5rem' }}>
               <DERTelemetryFlowMap />
