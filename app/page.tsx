@@ -940,7 +940,7 @@ export default function DERIMWebsite() {
             fontWeight: 700,
             letterSpacing: '0.5px'
           }}>
-            PRODUCTION-GRADE SIMULATION • MIRRORS REAL DERIM v0.1.1 CODEBASE
+            INTERACTIVE SIMULATION • ILLUSTRATIVE DATA • MIRRORS DERIM v0.1.1 ARCHITECTURE
           </div>
           
           <InteractiveDemoHub />

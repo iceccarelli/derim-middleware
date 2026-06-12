@@ -77,7 +77,7 @@ const demoModes: DemoMode[] = [
     id: 'adapter',
     label: 'Live Adapter Connection',
     icon: '🔌',
-    description: 'Connect real DER hardware via Modbus, MQTT, SunSpec or OCPP with production-grade adapters',
+    description: 'Connect DER hardware via Modbus, MQTT, SunSpec or OCPP using the open-source protocol adapters',
     color: '#34d399',
     accent: '#10b981'
   },
@@ -202,7 +202,7 @@ export default function InteractiveDemoHub() {
           
           setGithubStats({
             stars: repoData.stargazers_count || 0,
-            forks: repoData.forks_count || 89,
+            forks: repoData.forks_count || 0,
             updated: new Date(repoData.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
             lastCommit: lastCommitDate
           });
@@ -210,7 +210,7 @@ export default function InteractiveDemoHub() {
       } catch (e) {
         setGithubStats({
           stars: 0,
-          forks: 89,
+          forks: 0,
           updated: 'May 20',
           lastCommit: 'May 18'
         });
@@ -403,7 +403,7 @@ export default function InteractiveDemoHub() {
       { pct: 51, label: `Subscribing to ${selectedProtocol} topics & SunSpec models...`, delay: 410 },
       { pct: 74, label: 'Validating telemetry schema against DERIM Pydantic models...', delay: 390 },
       { pct: 91, label: 'Spawning PyTorch inference session & InfluxDB writer...', delay: 360 },
-      { pct: 100, label: 'LIVE — Streaming to DERIM production cluster', delay: 280 }
+      { pct: 100, label: 'LIVE — Streaming illustrative telemetry', delay: 280 }
     ];
 
     let progress = 0;
@@ -1046,7 +1046,7 @@ export default function InteractiveDemoHub() {
               borderRadius: '9999px',
               fontWeight: 700
             }}>
-              PRODUCTION
+              OPEN SOURCE
             </span>
           </div>
           
@@ -1088,7 +1088,7 @@ export default function InteractiveDemoHub() {
           fontSize: '1.05rem',
           lineHeight: 1.55
         }}>
-          Real-time simulation of <span className="text-[#34d399] font-semibold">DERIM middleware</span> — the production-grade integration layer for solar, storage &amp; EV fleets.<br />
+          Real-time simulation of <span className="text-[#34d399] font-semibold">DERIM middleware</span> — the open-source integration layer for solar, storage &amp; EV fleets.<br />
           <span className="text-xs text-[#64748b]">Mirrors the architecture and data models of the open-source Python/FastAPI + PyTorch stack. This panel runs on illustrative data in your browser.</span>
         </p>
       </div>
@@ -1142,7 +1142,7 @@ export default function InteractiveDemoHub() {
       <div className="mb-7">
         <div className="flex items-center justify-between mb-2.5">
           <div className="text-[#7dd3fc] text-xs tracking-[1px] font-semibold">SELECT CAPABILITY</div>
-          <div className="text-[10px] text-[#64748b]">All modes fully simulate production DERIM behavior</div>
+          <div className="text-[10px] text-[#64748b]">All modes run on illustrative data and mirror the open-source DERIM architecture</div>
         </div>
         
         <div className="relative">
@@ -1572,7 +1572,7 @@ export default function InteractiveDemoHub() {
         {showApiExplorer && (
           <div className="absolute inset-0 bg-black/90 rounded-3xl flex items-center justify-center z-40 p-8" onClick={() => setShowApiExplorer(false)}>
             <div className="bg-[#0f172a] border border-[#7dd3fc] rounded-2xl w-full max-w-lg p-7" onClick={e => e.stopPropagation()}>
-              <div className="text-[#7dd3fc] text-sm mb-4 font-semibold">DERIM PRODUCTION API EXPLORER</div>
+              <div className="text-[#7dd3fc] text-sm mb-4 font-semibold">DERIM API EXPLORER</div>
               
               <div className="space-y-3 text-sm">
                 {['/api/v1/telemetry/INV-7842', '/api/v1/forecast/INV-7842', '/api/v1/control/INV-7842'].map((ep, idx) => (
