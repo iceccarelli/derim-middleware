@@ -22,17 +22,23 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends gcc libffi-dev && \
     rm -rf /var/lib/apt/lists/*
 
+# Set INSTALL_ML=true to bundle the PyTorch LSTM stack (requirements/ml.txt):
+#   docker build --build-arg INSTALL_ML=true -t derim-middleware:ml .
+ARG INSTALL_ML=false
+
 # Copy requirements first for layer caching.
 COPY requirements/ requirements/
-RUN pip install --no-cache-dir --prefix=/install \
-    -r requirements/base.txt
+RUN pip install --no-cache-dir --prefix=/install -r requirements/base.txt && \
+    if [ "$INSTALL_ML" = "true" ]; then \
+        pip install --no-cache-dir --prefix=/install -r requirements/ml.txt; \
+    fi
 
 # ---------------------------------------------------------------------------
 # Stage 2: Runtime image
 # ---------------------------------------------------------------------------
 FROM python:3.11-slim AS runtime
 
-LABEL maintainer="DERIM Project <derim@example.com>"
+LABEL maintainer="Vincenzo Grimaldi (github.com/iceccarelli)"
 LABEL description="Smart Grid Digital Twin Middleware for DER Integration"
 LABEL version="0.1.1"
 

@@ -9,3 +9,4 @@ htmlcov/
 data/
 saved_models/
 next-env.d.ts
+.vercel

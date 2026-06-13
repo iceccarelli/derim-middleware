@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import HeroBridge from './HeroBridge';
 import InteractiveDemoHub from './InteractiveDemoHub';
+import DesignPartnerCTA from './DesignPartnerCTA';
 
 // ====================== TYPES ======================
 type ClockEntry = {
@@ -1207,7 +1208,10 @@ export default function DERIMWebsite() {
             </p>
           </div>
           <div className="hero-actions">
-            <a className="primary-button" href="https://github.com/iceccarelli/derim-middleware" target="_blank" rel="noreferrer">
+            <a className="primary-button" href="#design-partners">
+              Become a design partner →
+            </a>
+            <a className="secondary-button" href="https://github.com/iceccarelli/derim-middleware" target="_blank" rel="noreferrer">
               Clone DERIM on GitHub
             </a>
             <a className="secondary-button" href="#live-hub">
@@ -1222,6 +1226,8 @@ export default function DERIMWebsite() {
           </div>
         </div>
       </section>
+
+      <DesignPartnerCTA />
     </main>
   );
 }

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import Header from './Header';
 import CinematicBackground from './CinematicBackground';
+import Analytics from './Analytics';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -11,7 +12,7 @@ export const metadata: Metadata = {
     template: '%s | DERIM',
   },
   description:
-    'Open-source modular middleware that bridges heterogeneous DER hardware (solar PV inverters, BESS, EV chargers) to modern smart grid systems. Pluggable adapters (Modbus, MQTT, SunSpec, OCPP) • IEEE 2030.5 & IEC 61968 CIM normalization • PyTorch Digital Twin • FastAPI REST API • InfluxDB time-series • Full observability. Production-ready foundation for utilities, VPPs, and grid modernization. Experience the live interactive command center.',
+    'Open-source modular middleware that bridges heterogeneous DER hardware (solar PV inverters, BESS, EV chargers) to modern smart grid systems. Pluggable adapters (Modbus, MQTT, SunSpec, OCPP) • IEEE 2030.5 & IEC 61968 CIM normalization • PyTorch Digital Twin • FastAPI REST API • InfluxDB time-series • Full observability. An open foundation (Beta, v0.1.x) for utilities, VPPs, and grid modernization. Explore the live interactive command center.',
   keywords: [
     'DERIM',
     'Distributed Energy Resource Integration Middleware',
@@ -128,7 +129,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                   <p style={{ color: 'var(--muted-strong)', lineHeight: '1.6', fontSize: '0.95rem' }}>
                     Distributed Energy Resource Integration Middleware<br />
                     Bridge heterogeneous DER hardware to smart grid systems — deterministically, observably, and securely.<br />
-                    <span style={{ color: '#34d399' }}>Open source • Docker-ready • Production foundation • Live Interactive Demo</span>
+                    <span style={{ color: '#34d399' }}>Open source • Docker-ready • Beta • Live Interactive Demo</span>
                   </p>
                   <p style={{ marginTop: '2rem', fontSize: '0.85rem', color: 'var(--muted)' }}>
                     © 2026 DERIM Project • MIT Licensed • Built by Vincenzo Grimaldi
@@ -168,7 +169,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                   <h4>System Status</h4>
                   <div className="footer-status" style={{ marginBottom: '1rem' }}>
                     <span className="live-dot" />
-                    <span style={{ color: 'var(--success)', fontWeight: 600 }}>Ready for Production Use</span>
+                    <span style={{ color: 'var(--success)', fontWeight: 600 }}>Active Beta • Self-host today</span>
                   </div>
                   <p style={{ color: 'var(--muted)', fontSize: '0.9rem', lineHeight: '1.55' }}>
                     Self-host anywhere • Docker Compose ready<br />
@@ -193,6 +194,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
+        <Analytics />
       </body>
     </html>
   );
